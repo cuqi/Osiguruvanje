@@ -1,12 +1,7 @@
 package myservice;
 
 import javax.jws.WebService;
-import javax.xml.ws.WebServiceContext;
 
-import javafx.scene.chart.AreaChart;
-import jdk.nashorn.internal.ir.BreakableNode;
-
-import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 
@@ -14,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,7 +23,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Base64.Encoder;
 
-import javax.servlet.ServletContext;
 
 @WebService
 public class MyService {
@@ -49,7 +42,7 @@ public class MyService {
         return new Random().nextInt();
     }
 
-    @WebMethod // soap 1.1 
+    @WebMethod // soap 1.1
     public String loginMethod(@WebParam(name = "username")String username, @WebParam(name = "password")String password) throws NoSuchAlgorithmException {
         try {
             File file = new File("myservice/registeredUsers.txt");
@@ -306,8 +299,7 @@ public class MyService {
 
     @WebMethod
     public String bookTravelPolicy(@WebParam(name = "BookTravelInfo")TravelInfo bookTravelInfo, @WebParam(name = "sessionID")String sessionID) {
-        String policyID = "";
-        String currentID = "";            
+            
         System.out.println("good1");
         replaceSelected("1000", "0");
         // try {
