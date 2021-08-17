@@ -1,4 +1,5 @@
 package myservice;
+import client.*;
 
 import javax.xml.ws.Endpoint;
 
@@ -8,8 +9,14 @@ public class ServicePublisher {
         System.out.println("Publishing Service at endpoint " + url);
 
         Endpoint.publish(url, new MyService());
-        //Database db = Database.getInsance();
         
-        
+        MyServiceService service = new MyServiceService();
+        client.MyService port = (client.MyService) service.getMyServicePort();
+
+        try {
+            System.out.println(port.loginMethod("test_user", "pass123"));
+        } catch (NoSuchAlgorithmException_Exception e) {
+            e.printStackTrace();
+        }
     }    
 }
