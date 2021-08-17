@@ -171,7 +171,7 @@ public class MyService {
         int ageOfUser = 0;
         double premium = 0.0;
         if (sessionID.equals("")) {
-            return new TravelResponse("No sessionID", 101);
+            return new TravelResponse("No sessionID", 101, 0);
         } else {
             try {
                 File file = new File("myservice/sessions.txt");
@@ -192,7 +192,7 @@ public class MyService {
         }
 
         if (travelInfo.type == null) {
-            return new TravelResponse("Ве молиме внесете го типот на патничка полиса(INDIVIDUAL, FAMILY, STUDENT, GROUP, BUSINESS)", 110);
+            return new TravelResponse("Ве молиме внесете го типот на патничка полиса(INDIVIDUAL, FAMILY, STUDENT, GROUP, BUSINESS)", 110, 0);
         } else {
             switch(travelInfo.type) {
                 case INDIVIDUAL:
@@ -214,7 +214,7 @@ public class MyService {
         }
         
         if (travelInfo.cover == null) {
-            return new TravelResponse("Ве молиме внесете го покритието за патничката полиса(VISA, CLASSIC, CLASSIC_PLUS)", 111);
+            return new TravelResponse("Ве молиме внесете го покритието за патничката полиса(VISA, CLASSIC, CLASSIC_PLUS)", 111, 0);
         } else {
             switch(travelInfo.cover) {
                 case VISA:
@@ -229,7 +229,7 @@ public class MyService {
             }
         }
         
-        return new TravelResponse("Премијата за полисата изнесува: " + String.valueOf((int)premium + "ЕУР"), 100);
+        return new TravelResponse("Премијата за полисата изнесува: " + String.valueOf((int)premium + "ЕУР"), 100, (float) premium);
     }
 
     @WebMethod 
@@ -305,40 +305,49 @@ public class MyService {
     }
 
     @WebMethod
-    public String bookTravelPolicy(@WebParam(name = "BookTravelInfo")TravelInfo bookTravelInfo, @WebParam(name = "sessionID")String sessionID) {
+    public BookTravelResponse bookTravelPolicy(@WebParam(name = "BookTravelInfo")TravelInfo bookTravelInfo, @WebParam(name = "Insured")InsuredInfo insured, @WebParam(name = "sessionID")String sessionID) {
         String policyID = "";
-        String currentID = "";            
-        System.out.println("good1");
-        replaceSelected("1000", "0");
-        // try {
-        //     File file = new File("myservice/policyNumberEvidence.txt");
-        //     FileWriter fileWriter = new FileWriter("myservice/policyNumberEvidence.txt", true);
+        float premium = 0;
+        TravelResponse travelResponse =  getTravelQuotation(bookTravelInfo, sessionID);
+        premium = travelResponse.premium;
+        if (premium == 0) {
+            return new BookTravelResponse(travelResponse.message, travelResponse.code, "0");
+        }
 
-        //     Scanner scanner = new Scanner(file);
-        //     while(scanner.hasNextLine()) {
-        //         String line = scanner.nextLine();
-        //         String policyIDType[] = line.split(" ");
-        //         if (policyIDType[0].equals("TRA")) {
-        //             policyID = "TRA" + policyIDType[1];
-        //             currentID = policyIDType[1];
-        //             int nextID = Integer.valueOf(currentID) + 1;
-        //             fileWriter.write("TRA" + " " + String.valueOf(nextID) + "\r\n");
-        //             break;
-        //         } 
-        //     }
-        //     scanner.close();
-        //     fileWriter.close();
-        // } catch (FileNotFoundException e) {
-        //     e.printStackTrace();
-        // } catch (IOException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
+        if (insured.firstName.equals("")) {
+            return new BookTravelResponse("Ве молиме внесете го името на осигуреникот!", 111, "0");
+        } 
 
-        return "OK";
-        //return new BookTravelPolicyResponse("Успешно е креирана полиса: " + policyID, 100);
+        if (insured.lastName.equals("")) {
+            return new BookTravelResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
+        } 
+
+        String dateOfBirthString = "";
+        if (insured.dateOfBirth == null) {
+            return new BookTravelResponse("Ве молиме внесете го датумот на раѓање на осигуреникот!(формат: yyyy-mm-dd)", 113, "0");
+        } else {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            dateOfBirthString = format.format(insured.dateOfBirth);
+        }
+
+        try{
+            FileWriter file = new FileWriter("myservice/travelPolicies.txt", true);
+            policyID = "TRA" + replaceSelected();
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + dateOfBirthString + "\n";
+            file.write(newPolicy);
+            file.close();
+            
+        } catch (IOException e) {
+            System.out.println("Cannot open file");
+            e.printStackTrace();
+        }
+        
+
+        return new BookTravelResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
 
+    //@WebMethod
+    //public BookHouseholdResponse bookHouseholdPolicy(@WebParam(name = "HouseholdInfo")HouseholdInfo householdInfo,)
     /*
         POMOSHNI FUNKCII / NE SE DEL OD SERVISOT
     */
@@ -393,42 +402,39 @@ public class MyService {
         }
     }
 
-    public static void replaceSelected(String replaceWith, String type) {
-        try {
-            // input the file content to the StringBuffer "input"
-            BufferedReader file = new BufferedReader(new FileReader("myservice/policyNumberEvidence.txt"));
-            StringBuffer inputBuffer = new StringBuffer();
-            String line;
-            System.out.println("good1");
-            while ((line = file.readLine()) != null) {
-                inputBuffer.append(line);
-                inputBuffer.append('\n');
+    public static String replaceSelected() {
+            File fileToBeModified = new File("myservice/policyNumberEvidence.txt");
+            System.out.println("msg1");
+            String oldString = "";
+            BufferedReader reader = null;
+            FileWriter writer = null;
+            System.out.println("msg2");
+            try {
+                reader = new BufferedReader(new FileReader(fileToBeModified));
+                String line = reader.readLine();
+                System.out.println(line);
+                while (line != null) {
+                    oldString = oldString + line;
+                    line = reader.readLine();
+                }
+                System.out.println(oldString);
+                String newString = String.valueOf(Integer.valueOf(oldString) + 1);
+                System.out.println(newString);
+                writer = new FileWriter(fileToBeModified);
+                writer.write(newString);
+                return newString;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Error reading file!";
+            } finally {
+                try {
+                    reader.close();
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                
             }
-            file.close();
-            String inputStr = inputBuffer.toString();
-            int nextID = Integer.valueOf(inputStr) + 1;
-            System.out.println("Before:" + inputStr); // display the original file for debugging
-            inputStr = inputStr.replace(inputStr, String.valueOf(nextID));
-            System.out.println("After:" + inputStr); // display the original file for debugging
-    
-
-            // logic to replace lines in the string (could use regex here to be generic)
-            // if (type.equals("0")) {
-            //     inputStr = inputStr.replace(replaceWith + "1", replaceWith + "0"); 
-            // } else if (type.equals("1")) {
-            //     inputStr = inputStr.replace(replaceWith + "0", replaceWith + "1");
-            // }
-    
-            // display the new file for debugging
-            //System.out.println("----------------------------------\n" + inputStr);
-    
-            // write the new string with the replaced line OVER the same file
-            // FileOutputStream fileOut = new FileOutputStream("myservice/policyNumberEvidence.txt");
-            // fileOut.write(inputStr.getBytes());
-            // fileOut.close();
-    
-        } catch (Exception e) {
-            System.out.println("Problem reading file.");
-        }
-    }
+    }   
 }

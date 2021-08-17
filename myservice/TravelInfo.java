@@ -30,4 +30,8 @@ public class TravelInfo {
         this.days = days;
         this.country = country;
     }
+
+    public int getSize() {
+        return 4;
+    } 
 }

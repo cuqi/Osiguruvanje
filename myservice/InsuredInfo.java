@@ -2,15 +2,15 @@ package myservice;
 
 import java.util.Date;
 
-public class Insured {
+public class InsuredInfo {
     public String firstName;
     public String lastName;
     public Date dateOfBirth;
     public String ssn;
 
-    public Insured() {}
+    public InsuredInfo() {}
 
-    public Insured(String firstName, String lastName, Date dateOfBirth, String ssn) {
+    public InsuredInfo(String firstName, String lastName, Date dateOfBirth, String ssn) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
