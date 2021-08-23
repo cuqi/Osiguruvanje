@@ -1,17 +1,16 @@
 package myservice;
 
-public class TravelResponse {
+public class QuotationResponse {
     public String message;
     public int code;
     public float premium;
 
-    public TravelResponse() {
+    public QuotationResponse() {
     }
 
-    public TravelResponse(String message, int code, float premium) {
+    public QuotationResponse(String message, int code, float premium) {
         this.message = message;
         this.code = code;
         this.premium = premium;
     }
-
 }
