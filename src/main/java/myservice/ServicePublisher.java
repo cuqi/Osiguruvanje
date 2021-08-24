@@ -1,5 +1,4 @@
 package myservice;
-import client.*;
 
 import javax.xml.ws.Endpoint;
 
