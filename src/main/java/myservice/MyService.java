@@ -389,18 +389,24 @@ public class MyService {
             return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
         } 
 
-        String dateOfBirthString = "";
-        if (insured.dateOfBirth == null) {
-            return new BookResponse("Ве молиме внесете го датумот на раѓање на осигуреникот!(формат: yyyy-mm-dd)", 113, "0");
-        } else {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            dateOfBirthString = format.format(insured.dateOfBirth);
+        int ageOfInsured = 0;
+        if (insured.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (insured.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
+        } 
+        else {
+            ageOfInsured = getAgeFromSSN(insured.ssn);
         }
 
+        String todaysDateString = "";
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        todaysDateString = format.format(date); 
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\travelPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + dateOfBirthString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -431,18 +437,25 @@ public class MyService {
             return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
         } 
 
-        String dateOfBirthString = "";
-        if (insured.dateOfBirth == null) {
-            return new BookResponse("Ве молиме внесете го датумот на раѓање на осигуреникот!(формат: yyyy-mm-dd)", 113, "0");
-        } else {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            dateOfBirthString = format.format(insured.dateOfBirth);
+        int ageOfInsured = 0;
+        if (insured.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (insured.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
         }
+        else {
+            ageOfInsured = getAgeFromSSN(insured.ssn);
+        }
+
+        String todaysDateString = "";
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        todaysDateString = format.format(date); 
 
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\householdPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + dateOfBirthString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -471,18 +484,25 @@ public class MyService {
             return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
         } 
 
-        String dateOfBirthString = "";
-        if (insured.dateOfBirth == null) {
-            return new BookResponse("Ве молиме внесете го датумот на раѓање на осигуреникот!(формат: yyyy-mm-dd)", 113, "0");
-        } else {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            dateOfBirthString = format.format(insured.dateOfBirth);
+        int ageOfInsured = 0;
+        if (insured.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (insured.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
         }
+        else {
+            ageOfInsured = getAgeFromSSN(insured.ssn);
+        }
+
+        String todaysDateString = "";
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        todaysDateString = format.format(date); 
 
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\cascoPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + dateOfBirthString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -490,6 +510,11 @@ public class MyService {
             e.printStackTrace();
         }
         return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
+    }
+
+    @WebMethod
+    public double converter(@WebParam(name = "EUR") String evra) {
+        return Integer.valueOf(evra) * 61.5;
     }
 
     /*
