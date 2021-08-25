@@ -140,35 +140,11 @@ public class MyService {
 
     @WebMethod 
     public QuotationResponse getTravelQuotation(@WebParam(name = "travelInfo")TravelInfo travelInfo, @WebParam(name = "sessionID")String sessionID) {
-        int ageOfUser = 0;
         double premium = 0.0;
-        int found = 0;
         if (sessionID.equals("")) {
             return new QuotationResponse("No sessionID", 101, 0);
-        } else {
-            try {
-                File file = new File("src\\main\\java\\data\\sessions.txt");
-                Scanner scanner = new Scanner(file);
-                while(scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String sessionInfo[] = line.split(" ");
-                    if (sessionID.equals(sessionInfo[1])) {
-                        found = 1;
-                        ageOfUser = getAgeFromSSN(sessionInfo[0]);  // ja zemame vozrasta spored matichniot
-                        break;
-                    } else {
-                        found = 0;
-                        //return new CascoResponse("Session ID е погрешно!", 102, 0);
-                    }
-                }
-                scanner.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (found == 0) {
-            return new QuotationResponse("Session ID е погрешно!", 102, 0);
+        } else if (checkSessionID(sessionID) == 0) {
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
         }
 
         if (travelInfo.type == null) {
@@ -214,35 +190,11 @@ public class MyService {
 
     @WebMethod 
     public QuotationResponse getHouseholdQuotation(@WebParam(name = "HouseholdInfo")HouseholdInfo householdInfo, @WebParam(name = "sessionID")String sessionID) {
-        int ageOfUser = 0;
         double premium = 0.0;
-        int found = 0;
         if (sessionID.equals("")) {
             return new QuotationResponse("No session ID", 101, 0);
-        } else {
-            try {
-                File file = new File("src\\main\\java\\data\\sessions.txt");
-                Scanner scanner = new Scanner(file);
-                while(scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String sessionInfo[] = line.split(" ");
-                    if (sessionID.equals(sessionInfo[1])) {
-                        found = 1;
-                        ageOfUser = getAgeFromSSN(sessionInfo[0]);  // ja zemame vozrasta spored matichniot
-                    } else {
-                        found = 0;
-                        break;
-                        //return new CascoResponse("Session ID е погрешно!", 102, 0);
-                    }
-                }
-                scanner.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (found == 0) {
-            return new QuotationResponse("Session ID е погрешно!", 102, 0);
+        } else if (checkSessionID(sessionID) == 0){
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
         }
 
         if (householdInfo.typeObject == null) {
@@ -294,36 +246,13 @@ public class MyService {
 
     @WebMethod 
     public QuotationResponse getCascoQuotation(@WebParam(name = "CascoInfo")CascoInfo cascoInfo, @WebParam(name = "sessionID")String sessionID) {
-        int ageOfUser = 0;
         double premium = 0;
-        int found = 0;
         if (sessionID.equals("")) {
             return new QuotationResponse("Ви недостасува број на сесија!", 101, 0);
-        } else {
-            try {
-                File file = new File("src\\main\\java\\data\\sessions.txt");
-                Scanner scanner = new Scanner(file);
-                while(scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    String sessionInfo[] = line.split(" ");
-                    if (sessionID.equals(sessionInfo[1])) {
-                        found = 1;
-                        ageOfUser = getAgeFromSSN(sessionInfo[0]);
-                        break;
-                    } else {
-                        found = 0;
-                        //return new CascoResponse("Session ID е погрешно!", 102, 0);
-                    }
-                }
-                scanner.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        } else if (checkSessionID(sessionID) == 0){
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
         }
 
-        if (found == 0) {
-            return new QuotationResponse("Session ID е погрешно!", 102, 0);
-        }
         if (cascoInfo.typeCasco == null) {
             return new QuotationResponse("Ве молиме внесете го типот на каско полисата(FULL, PARTIAL, BASIC)", 111, 0);
         } else {
@@ -513,6 +442,29 @@ public class MyService {
     }
 
     @WebMethod
+    public ConfirmResponse confirmPolicy(@WebParam(name = "policyID")String policyID, @WebParam(name = "creditCardInfo") CreditCardInfo creditCardInfo, @WebParam(name = "sessionID") String sessionID){
+        if (policyID.equals("")) {
+            return new ConfirmResponse("Please enter the policyID", 110);
+        }
+
+        if (creditCardInfo.creditCardNumber.equals("")) {
+            return new ConfirmResponse("Внесете број на картичка", 111);
+        } else if (creditCardInfo.creditCardNumber.length() != 16) {
+            return new ConfirmResponse("Внесете 16 цифри за број на картичка", 112);
+        }
+        
+        if (creditCardInfo.expiryDate == null) {
+            return new ConfirmResponse("Внесете го датумот на истекување на картичката(формат: mm/yyyy)", 113);
+        } else {
+            Date todayDate = new Date();
+        }
+
+        return new ConfirmResponse("Policy with policy number:" + policyID + " has been successfully paid", 100);
+    }
+
+
+
+    @WebMethod
     public double converter(@WebParam(name = "EUR") String evra) {
         return Integer.valueOf(evra) * 61.5;
     }
@@ -609,4 +561,27 @@ public class MyService {
                 
             }
     }   
+
+    public static int checkSessionID(String sessionID) {
+        int found = 0;
+        try {
+            File file = new File("src\\main\\java\\data\\sessions.txt");
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String sessionInfo[] = line.split(" ");
+                if (sessionID.equals(sessionInfo[1])) {
+                    found = 1;
+                    break;
+                } else {
+                    found = 0;
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            found = 0;
+            e.printStackTrace();
+        }
+        return found;
+    }
 }
