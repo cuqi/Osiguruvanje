@@ -2,7 +2,9 @@ package myservice.REST;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -187,26 +189,43 @@ public class Helpers {
         return returnsesh;
 	}
 
-    public static String findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
+    public static int findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
 
         String line = null;
+        int isOK = 0;
         for(String s: policiesList)
         {
             File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
-    
+            StringBuffer inputBuffer = new StringBuffer();
+
             while ((line = br.readLine()) != null) 
             {
-                if((line.split("|")[0]).equals(policyID)) 
+                if((line.split("\\|")[0]).equals(policyID)) 
                 {
-                    break; 
+                    if (line.split("\\|")[9].equals("OP")) {
+                        isOK = 1;
+                        inputBuffer.append(line.replace("OP", "CL"));
+                        inputBuffer.append("\n");
+                    } else {
+                        isOK = 0;
+                    }
+                } else {
+                    inputBuffer.append(line);
+                    inputBuffer.append("\n");
                 }
             }
+            if (isOK == 1) {
+                FileWriter fileOut = new FileWriter(file);
+                fileOut.write(inputBuffer.toString());
+                fileOut.close();
+            }
+            
             br.close();
         }
 
-        return line;
+        return isOK;
 	}
 
 }

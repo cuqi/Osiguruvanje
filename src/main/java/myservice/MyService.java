@@ -391,7 +391,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\householdPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -438,7 +438,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\cascoPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -478,22 +478,31 @@ public class MyService {
             return new ConfirmResponse("Внесете број на полиса!", 110);
         } else {
             try {
-                if (Helpers.getPolicies("all").contains(policyID)) {
-                    
-                } else {
-                    return new ConfirmResponse("Бројот на полиса е невалиден!", 116);
-                }
+                int isOK = Helpers.findPolicyFromPolicyID(policyID);
+                if (isOK == 0) {
+                    return new ConfirmResponse("Полисата е веќе платена!", 117);
+                } 
+                // int exit = 0;
+                // List<String> arrList = Helpers.getPolicies("all");
+                // for(int i = 0; i < arrList.size(); i++) {
+                //     String [] temp = arrList.get(i).split("\\|");
+                //     if (temp[0].equals(policyID)) {
+                //         int isOK = Helpers.findPolicyFromPolicyID(policyID);
+                //         if (isOK == 0) {
+                //             return new ConfirmResponse("Полисата е веќе платена!", 117);
+                //         } 
+                //     } else {
+                //         exit = 1;
+                //     }
+                // }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         return new ConfirmResponse("Полисата со број: " + policyID + " е успешно платена", 100);
     }
-
-
 
     @WebMethod
     public double converter(@WebParam(name = "EUR") String evra) {
