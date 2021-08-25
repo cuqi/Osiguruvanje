@@ -15,25 +15,23 @@ public class RESTController {
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	// @GET
-	// @Produces(MediaType.APPLICATION_JSON)
+
 	@GetMapping("/greeting")
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
 
 	@GetMapping("/myinsurance")
-	public String myInsurances(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String myInsurances(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPoliciesFromSession(s));
@@ -54,7 +52,7 @@ public class RESTController {
 		return policies.toString();
 	}
 
-	@GetMapping("/thisday")
+	@GetMapping("/thisdate")
 	public String policyFromToday(@RequestParam(value = "date", defaultValue = "today") String date) throws NumberFormatException, IOException {
 
 		List<String> policies = new ArrayList<String>();
@@ -71,7 +69,7 @@ public class RESTController {
 
 		if(policy != "all" && !Helpers.policiesList.toString().contains(policy))
 		{
-			return "Enter a valid policy name";
+			return "Внесете валидно име на полиса";
 		}
 		else
 		{
@@ -87,7 +85,7 @@ public class RESTController {
 
 		if(!Helpers.policiesList.toString().contains(policy))
 		{
-			return "Enter a valid policy name";
+			return "Внесете валидно име на полиса";
 		}
 		else
 		{
@@ -96,17 +94,16 @@ public class RESTController {
 	}
 
 	@GetMapping("/paid")
-	public String paidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String paidPolicies(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "paid")); //I tuka da se smeni!
@@ -118,17 +115,16 @@ public class RESTController {
 	}
 
 	@GetMapping("/unpaid")
-	public String unpaidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String unpaidPolicies(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "unpaid")); //I tuka da se smeni!

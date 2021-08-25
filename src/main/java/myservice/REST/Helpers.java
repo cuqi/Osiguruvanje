@@ -12,9 +12,7 @@ public class Helpers {
     public static String[] policiesList = {"casco", "household", "travel"};
     public static String urlBuilder = "src\\main\\java\\data\\";
 
-    public static List<String> sessionsfromSSN(String ssn) throws NumberFormatException, IOException {
-
-		long ssnInteger = Long.parseLong(ssn);
+    public static List<String> sessionsfromEmail(String email) throws NumberFormatException, IOException {
 
         java.util.List<String> returnsesh = new ArrayList<String>();
 
@@ -26,7 +24,7 @@ public class Helpers {
 
         while ((line = br.readLine()) != null) 
         {
-            if(Long.parseLong((line.split("\\s+")[0])) == ssnInteger)
+            if((line.split("\\s+")[0]).equals(email))
             {
                 returnsesh.add((line.split("\\s+")[1]));
             }
@@ -43,8 +41,7 @@ public class Helpers {
 
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -75,8 +72,7 @@ public class Helpers {
         }
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -104,8 +100,7 @@ public class Helpers {
         year = year.split("-")[0];
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -137,8 +132,7 @@ public class Helpers {
 
         for(String s: whichPolicies)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -156,8 +150,7 @@ public class Helpers {
 
     public static String getPolicyNumber(String policy) throws NumberFormatException, IOException {
 
-        urlBuilder += policy + "PolicyEvidence.txt";
-        File file = new File(urlBuilder);
+        File file = new File(urlBuilder + policy + "PolicyEvidence.txt");
         BufferedReader br;
         br = new BufferedReader(new FileReader(file));
 
@@ -175,8 +168,7 @@ public class Helpers {
 
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -195,5 +187,26 @@ public class Helpers {
         return returnsesh;
 	}
 
+    public static String findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
+
+        String line = null;
+        for(String s: policiesList)
+        {
+            File file = new File(urlBuilder + s + "Policies.txt");
+            BufferedReader br;
+            br = new BufferedReader(new FileReader(file));
+    
+            while ((line = br.readLine()) != null) 
+            {
+                if((line.split("|")[0]).equals(policyID)) 
+                {
+                    break; 
+                }
+            }
+            br.close();
+        }
+
+        return line;
+	}
 
 }
