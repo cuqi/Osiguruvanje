@@ -189,5 +189,26 @@ public class Helpers {
         return returnsesh;
 	}
 
+    public static String findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
+
+        String line = null;
+        for(String s: policiesList)
+        {
+            File file = new File(urlBuilder + s + "Policies.txt");
+            BufferedReader br;
+            br = new BufferedReader(new FileReader(file));
+    
+            while ((line = br.readLine()) != null) 
+            {
+                if((line.split("|")[0]).equals(policyID)) 
+                {
+                    break; 
+                }
+            }
+            br.close();
+        }
+        
+        return line;
+	}
 
 }

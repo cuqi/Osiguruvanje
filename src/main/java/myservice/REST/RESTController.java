@@ -15,7 +15,7 @@ public class RESTController {
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	
+
 	@GetMapping("/greeting")
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
@@ -28,7 +28,7 @@ public class RESTController {
 		List<String> policies = new ArrayList<String>();
 		if(ssnInteger == -1)
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валиден ЕМБГ";
 		}
 		else
 		{
@@ -70,7 +70,7 @@ public class RESTController {
 
 		if(policy != "all" && !Helpers.policiesList.toString().contains(policy))
 		{
-			return "Enter a valid policy name";
+			return "Внесете валидно име на полиса";
 		}
 		else
 		{
@@ -86,7 +86,7 @@ public class RESTController {
 
 		if(!Helpers.policiesList.toString().contains(policy))
 		{
-			return "Enter a valid policy name";
+			return "Внесете валидно име на полиса";
 		}
 		else
 		{
@@ -101,7 +101,7 @@ public class RESTController {
 		List<String> policies = new ArrayList<String>();
 		if(ssnInteger == -1)
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валиден ЕМБГ";
 		}
 		else
 		{
@@ -123,7 +123,7 @@ public class RESTController {
 		List<String> policies = new ArrayList<String>();
 		if(ssnInteger == -1)
 		{
-			return "Please enter a valid SSN";
+			return "Внесете валиден ЕМБГ";
 		}
 		else
 		{
