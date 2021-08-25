@@ -43,8 +43,7 @@ public class Helpers {
 
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -75,8 +74,7 @@ public class Helpers {
         }
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -104,8 +102,7 @@ public class Helpers {
         year = year.split("-")[0];
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -137,8 +134,7 @@ public class Helpers {
 
         for(String s: whichPolicies)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     
@@ -156,8 +152,7 @@ public class Helpers {
 
     public static String getPolicyNumber(String policy) throws NumberFormatException, IOException {
 
-        urlBuilder += policy + "PolicyEvidence.txt";
-        File file = new File(urlBuilder);
+        File file = new File(urlBuilder + policy + "PolicyEvidence.txt");
         BufferedReader br;
         br = new BufferedReader(new FileReader(file));
 
@@ -175,8 +170,7 @@ public class Helpers {
 
         for(String s: policiesList)
         {
-            urlBuilder += s + "Policies.txt";
-            File file = new File(urlBuilder);
+            File file = new File(urlBuilder + s + "Policies.txt");
             BufferedReader br;
             br = new BufferedReader(new FileReader(file));
     

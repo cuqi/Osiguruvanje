@@ -15,8 +15,7 @@ public class RESTController {
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	// @GET
-	// @Produces(MediaType.APPLICATION_JSON)
+	
 	@GetMapping("/greeting")
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
@@ -54,7 +53,7 @@ public class RESTController {
 		return policies.toString();
 	}
 
-	@GetMapping("/thisday")
+	@GetMapping("/thisdate")
 	public String policyFromToday(@RequestParam(value = "date", defaultValue = "today") String date) throws NumberFormatException, IOException {
 
 		List<String> policies = new ArrayList<String>();
