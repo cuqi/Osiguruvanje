@@ -12,9 +12,7 @@ public class Helpers {
     public static String[] policiesList = {"casco", "household", "travel"};
     public static String urlBuilder = "src\\main\\java\\data\\";
 
-    public static List<String> sessionsfromSSN(String ssn) throws NumberFormatException, IOException {
-
-		long ssnInteger = Long.parseLong(ssn);
+    public static List<String> sessionsfromEmail(String email) throws NumberFormatException, IOException {
 
         java.util.List<String> returnsesh = new ArrayList<String>();
 
@@ -26,7 +24,7 @@ public class Helpers {
 
         while ((line = br.readLine()) != null) 
         {
-            if(Long.parseLong((line.split("\\s+")[0])) == ssnInteger)
+            if((line.split("\\s+")[0]).equals(email))
             {
                 returnsesh.add((line.split("\\s+")[1]));
             }
@@ -207,7 +205,7 @@ public class Helpers {
             }
             br.close();
         }
-        
+
         return line;
 	}
 

@@ -22,17 +22,16 @@ public class RESTController {
 	}
 
 	@GetMapping("/myinsurance")
-	public String myInsurances(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String myInsurances(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Внесете валиден ЕМБГ";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPoliciesFromSession(s));
@@ -95,17 +94,16 @@ public class RESTController {
 	}
 
 	@GetMapping("/paid")
-	public String paidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String paidPolicies(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Внесете валиден ЕМБГ";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "paid")); //I tuka da se smeni!
@@ -117,17 +115,16 @@ public class RESTController {
 	}
 
 	@GetMapping("/unpaid")
-	public String unpaidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String unpaidPolicies(@RequestParam(value = "email", defaultValue = "-1") String email) throws NumberFormatException, IOException {
 
-		long ssnInteger = Long.parseLong(ssn);
 		List<String> policies = new ArrayList<String>();
-		if(ssnInteger == -1)
+		if(email.equals("-1"))
 		{
-			return "Внесете валиден ЕМБГ";
+			return "Внесете валидна е-пошта";
 		}
 		else
 		{
-			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
 				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "unpaid")); //I tuka da se smeni!
