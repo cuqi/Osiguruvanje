@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 public class test {
     public static void main(String[] args) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-yy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/yyyy");
         Date date = new Date();
         String todaysDate = formatter.format(date); 
         System.out.println(todaysDate);

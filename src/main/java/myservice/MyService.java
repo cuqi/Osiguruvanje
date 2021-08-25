@@ -1,5 +1,7 @@
 package myservice;
 
+import myservice.REST.Helpers;
+
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -16,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Scanner;
@@ -65,7 +69,7 @@ public class MyService {
     }
 
     @WebMethod
-    public String register(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2, @WebParam(name = "SSN")String ssn ) throws NoSuchAlgorithmException {
+    public String register(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2, @WebParam(name = "email")String email) throws NoSuchAlgorithmException {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\registeredUsers.txt", true);
             String newUser = "";
@@ -75,7 +79,7 @@ public class MyService {
                 password1.getBytes(StandardCharsets.UTF_8)
                 );
                 String hashedPassword = bytesToHex(encodedhash);
-                newUser = username + " " + hashedPassword + " " + ssn + "\r\n";
+                newUser = username + " " + hashedPassword + " " + email + "\r\n";
             } 
             file.write(newUser);
             file.close();
@@ -103,10 +107,12 @@ public class MyService {
                 byte[] encodedhash = digest.digest(
                 password1.getBytes(StandardCharsets.UTF_8)
                 );
-                String hashedPassword = bytesToHex(encodedhash);;
+                String hashedPassword = bytesToHex(encodedhash);
 
                 if((currentLine = reader.readLine()) != null) {
-                    if(currentLine.equals(username + " " + hashedPassword)) {
+                    String[] entries = currentLine.split(" ");
+                    // System.out.println(entries[0] + " " + entries[1]);
+                    if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
                         flag = true;
                     } else {
                         writer.write(currentLine);
@@ -114,7 +120,8 @@ public class MyService {
                 }
 
                 while((currentLine = reader.readLine()) != null) {
-                    if(currentLine.equals(username + " " + hashedPassword)) {
+                    String[] entries = currentLine.split(" ");
+                    if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
                         flag = true;
                         continue;
                     } 
@@ -335,7 +342,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\travelPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|"+ sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -384,7 +391,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\householdPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -431,7 +438,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\cascoPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -443,8 +450,9 @@ public class MyService {
 
     @WebMethod
     public ConfirmResponse confirmPolicy(@WebParam(name = "policyID")String policyID, @WebParam(name = "creditCardInfo") CreditCardInfo creditCardInfo, @WebParam(name = "sessionID") String sessionID){
-        if (policyID.equals("")) {
-            return new ConfirmResponse("Please enter the policyID", 110);
+        
+        if (checkSessionID(sessionID) == 0) {
+            return new ConfirmResponse("Бројот на сесија е невалиден!", 117);
         }
 
         if (creditCardInfo.creditCardNumber.equals("")) {
@@ -456,10 +464,33 @@ public class MyService {
         if (creditCardInfo.expiryDate == null) {
             return new ConfirmResponse("Внесете го датумот на истекување на картичката(формат: mm/yyyy)", 113);
         } else {
-            Date todayDate = new Date();
+            Date date = new Date();
+            if (creditCardInfo.expiryDate.before(date)) {
+                return new ConfirmResponse("Истечена ви е картичката", 114);
+            }
+        }
+        
+        if (creditCardInfo.CVV.length() != 3) {
+            return new ConfirmResponse("Внесете 3 цифри за CVV", 115);
         }
 
-        return new ConfirmResponse("Policy with policy number:" + policyID + " has been successfully paid", 100);
+        if (policyID.equals("")) {
+            return new ConfirmResponse("Внесете број на полиса!", 110);
+        } else {
+            try {
+                if (Helpers.getPolicies("all").contains(policyID)) {
+                    
+                } else {
+                    return new ConfirmResponse("Бројот на полиса е невалиден!", 116);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new ConfirmResponse("Полисата со број: " + policyID + " е успешно платена", 100);
     }
 
 
@@ -584,4 +615,5 @@ public class MyService {
         }
         return found;
     }
+
 }

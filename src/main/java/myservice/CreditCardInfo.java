@@ -5,13 +5,13 @@ import java.util.Date;
 public class CreditCardInfo {
     public String creditCardNumber;
     public Date expiryDate;
-    public int CVV;    
+    public String CVV;    
 
     public CreditCardInfo() {
 
     }
 
-    public CreditCardInfo(String creditCardNumber, Date expiryDate, int CVV) {
+    public CreditCardInfo(String creditCardNumber, Date expiryDate, String CVV) {
         this.creditCardNumber = creditCardNumber;
         this.expiryDate = expiryDate;
         this.CVV = CVV;
