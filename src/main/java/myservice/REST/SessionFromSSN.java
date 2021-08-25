@@ -25,15 +25,15 @@ public class SessionFromSSN {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{ User SSN is: " + String.valueOf(userSSN) + " \r\n");
-        stringBuilder.append("With number of sessions: " + this.sessions.size() + " \r\n");
-        stringBuilder.append("And codes: \r\n");
+        stringBuilder.append("{ </br> User SSN is: " + String.valueOf(userSSN) + "</br>");
+        stringBuilder.append("With number of sessions: " + this.sessions.size() + "</br>");
+        stringBuilder.append("Session codes: </br>\n");
         for (String s : this.sessions)
         {
-            stringBuilder.append(s + " \r\n");
+            stringBuilder.append("[ " + s + " ] </br>");
         }
 
-        stringBuilder.append("} \r\n");
+        stringBuilder.append("}" + "</br>");
 
         return stringBuilder.toString();
     }

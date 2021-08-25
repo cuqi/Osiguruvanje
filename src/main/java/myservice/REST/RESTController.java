@@ -1,11 +1,9 @@
 package myservice.REST;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,35 +23,120 @@ public class RESTController {
 	}
 
 	@GetMapping("/myinsurance")
-	public String sessionfromSSN(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+	public String myInsurances(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
 
 		long ssnInteger = Long.parseLong(ssn);
+		List<String> policies = new ArrayList<String>();
 		if(ssnInteger == -1)
 		{
 			return "Please enter a valid SSN";
 		}
 		else
 		{
-			java.util.List<String> returnsesh = new ArrayList<String>();
-
-			File file = new File("src\\main\\java\\myservice\\sessions.txt");
-			BufferedReader br;
-			br = new BufferedReader(new FileReader(file));
-
-			String line;
-
-			while ((line = br.readLine()) != null) 
+			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			for (String s : sessions)
 			{
-				if(Long.parseLong((line.split("\\s+")[0])) == ssnInteger)
-				{
-					returnsesh.add((line.split("\\s+")[1]));
-				}
-				
+				policies.addAll(Helpers.getPoliciesFromSession(s));
 			}
-			br.close();
-			return new SessionFromSSN(ssnInteger, returnsesh).toString();
+
 		}
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();
 		
+	}
+
+	@GetMapping("/thisyear")
+	public String policyFromThisYear() throws NumberFormatException, IOException {
+
+		List<String> policies = new ArrayList<String>();
+		policies = Helpers.getPoliciesYearToDate();
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();
+	}
+
+	@GetMapping("/thisday")
+	public String policyFromToday(@RequestParam(value = "date", defaultValue = "today") String date) throws NumberFormatException, IOException {
+
+		List<String> policies = new ArrayList<String>();
+		policies = Helpers.getPoliciesFromToday(date);
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();
+	}
+
+
+	@GetMapping("/policies")
+	public String policies(@RequestParam(value = "policy", defaultValue = "all") String policy) throws NumberFormatException, IOException {
+
+		List<String> policies = new ArrayList<String>();
+
+		if(policy != "all" && !Helpers.policiesList.toString().contains(policy))
+		{
+			return "Enter a valid policy name";
+		}
+		else
+		{
+			policies = Helpers.getPolicies(policy);
+		}
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();
+		
+	}
+
+	@GetMapping("/policyNumber")
+	public String policyNumber(@RequestParam(value = "policy", defaultValue = "casco") String policy) throws NumberFormatException, IOException {
+
+		if(!Helpers.policiesList.toString().contains(policy))
+		{
+			return "Enter a valid policy name";
+		}
+		else
+		{
+			return Helpers.getPolicyNumber(policy);
+		}	
+	}
+
+	@GetMapping("/paid")
+	public String paidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+
+		long ssnInteger = Long.parseLong(ssn);
+		List<String> policies = new ArrayList<String>();
+		if(ssnInteger == -1)
+		{
+			return "Please enter a valid SSN";
+		}
+		else
+		{
+			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			for (String s : sessions)
+			{
+				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "paid")); //I tuka da se smeni!
+			}
+
+		}
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();	
+	}
+
+	@GetMapping("/unpaid")
+	public String unpaidPolicies(@RequestParam(value = "ssn", defaultValue = "-1") String ssn) throws NumberFormatException, IOException {
+
+		long ssnInteger = Long.parseLong(ssn);
+		List<String> policies = new ArrayList<String>();
+		if(ssnInteger == -1)
+		{
+			return "Please enter a valid SSN";
+		}
+		else
+		{
+			List<String> sessions = Helpers.sessionsfromSSN(ssn);
+			for (String s : sessions)
+			{
+				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "unpaid")); //I tuka da se smeni!
+			}
+
+		}
+		//ako treba da smenam nacin za printanje tuka toa
+		return policies.toString();	
 	}
 
 }

@@ -406,7 +406,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\travelPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|"+ sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -455,7 +455,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\householdPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
@@ -502,7 +502,7 @@ public class MyService {
         try{
             FileWriter file = new FileWriter("src\\main\\java\\data\\cascoPolicies.txt", true);
             policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
+            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "\n";
             file.write(newPolicy);
             file.close();
             
