@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +37,7 @@ public class RESTController {
 			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
+				System.out.println(s);
 				policies.addAll(Helpers.getPoliciesFromSession(s));
 			}
 
@@ -67,7 +71,7 @@ public class RESTController {
 
 		List<String> policies = new ArrayList<String>();
 
-		if(policy != "all" && !Helpers.policiesList.toString().contains(policy))
+		if(!policy.equals("all") && Helpers.policiesList.toString().contains(policy))
 		{
 			return "Внесете валидно име на полиса";
 		}
@@ -83,7 +87,7 @@ public class RESTController {
 	@GetMapping("/policyNumber")
 	public String policyNumber(@RequestParam(value = "policy", defaultValue = "casco") String policy) throws NumberFormatException, IOException {
 
-		if(!Helpers.policiesList.toString().contains(policy))
+		if(Helpers.policiesList.toString().contains(policy))
 		{
 			return "Внесете валидно име на полиса";
 		}
@@ -106,7 +110,7 @@ public class RESTController {
 			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
-				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "paid")); //I tuka da se smeni!
+				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "CL")); //I tuka da se smeni!
 			}
 
 		}
@@ -127,12 +131,29 @@ public class RESTController {
 			List<String> sessions = Helpers.sessionsfromEmail(email);
 			for (String s : sessions)
 			{
-				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "unpaid")); //I tuka da se smeni!
+				policies.addAll(Helpers.getPaidOrUnpaidPolicies(s, "OP")); //I tuka da se smeni!
 			}
 
 		}
 		//ako treba da smenam nacin za printanje tuka toa
 		return policies.toString();	
 	}
+
+	@GetMapping("email")
+	public String sendConformationEmail(@RequestParam(value = "policyID", defaultValue = "-1") String policyID) throws NumberFormatException, IOException, AddressException, MessagingException
+	{
+		String email = "";
+		if(policyID.equals("-1"))
+		{
+			return "Внесете валиден код на полисата";
+		}
+		else
+		{
+			String policy = Helpers.findPolicyFromPolicyID(policyID);
+			email = Helpers.findEmailFromSession(policy.split("\\|")[6]);
+			Mail.sendmail(email, policy);
+		}
+		return "Провери си го сандачето: " + email + " :)";
+	}	
 
 }

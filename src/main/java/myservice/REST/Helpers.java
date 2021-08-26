@@ -2,7 +2,6 @@ package myservice.REST;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,13 +17,13 @@ public class Helpers {
 
         java.util.List<String> returnsesh = new ArrayList<String>();
 
-        File file = new File("src\\main\\java\\data\\sessions.txt");
+        File file = new File(urlBuilder + "sessions.txt");
         BufferedReader br;
         br = new BufferedReader(new FileReader(file));
 
         String line;
 
-        while ((line = br.readLine()) != null) 
+        while ((line = br.readLine()) != null && line != "") 
         {
             if((line.split("\\s+")[0]).equals(email))
             {
@@ -49,11 +48,12 @@ public class Helpers {
     
             String line;
     
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
-                if((line.split("|")[6]).equals(session))
+                System.out.println(line.split("\\|").length);
+                if((line.split("\\|")[6]).equals(session))
                 {
-                    returnsesh.add((line.split("|")[0]));
+                    returnsesh.add((line.split("\\|")[0]));
                 }
             }
             br.close();
@@ -80,11 +80,11 @@ public class Helpers {
     
             String line;
     
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
-                if((line.split("|")[8]).equals(date))
+                if((line.split("\\|")[8]).equals(date))
                 {
-                    returnsesh.add((line.split("|")[0]));
+                    returnsesh.add((line.split("\\|")[0]));
                 }
             }
             br.close();
@@ -108,11 +108,11 @@ public class Helpers {
     
             String line;
     
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
-                if(((line.split("|")[8]).split("-")[0]).equals(year))
+                if(((line.split("\\|")[8]).split("-")[0]).equals(year))
                 {
-                    returnsesh.add((line.split("|")[0]));
+                    returnsesh.add((line.split("\\|")[0]));
                 }
             }
             br.close();
@@ -140,7 +140,7 @@ public class Helpers {
     
             String line;
     
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
                 returnsesh.add(line + "</br>");
             }
@@ -176,11 +176,11 @@ public class Helpers {
     
             String line;
     
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
-                if((line.split("|")[6]).equals(session) && (line.split("|")[1000]).equals(status)) //DA SE SMENI ZA KADE KJE PISUVA DALI E PLATENO ILI NE
+                if((line.split("\\|")[6]).equals(session) && (line.split("\\|")[9]).equals(status)) 
                 {
-                    returnsesh.add((line.split("|")[0]));
+                    returnsesh.add((line.split("\\|")[0]));
                 }
             }
             br.close();
@@ -189,7 +189,7 @@ public class Helpers {
         return returnsesh;
 	}
 
-    public static int findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
+    public static int payForPolicy(String policyID) throws NumberFormatException, IOException {
 
         String line = null;
         int isOK = 0;
@@ -200,7 +200,7 @@ public class Helpers {
             br = new BufferedReader(new FileReader(file));
             StringBuffer inputBuffer = new StringBuffer();
 
-            while ((line = br.readLine()) != null) 
+            while ((line = br.readLine()) != null && line != "") 
             {
                 if((line.split("\\|")[0]).equals(policyID)) 
                 {
@@ -226,6 +226,48 @@ public class Helpers {
         }
 
         return isOK;
+	}
+
+    public static String findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {
+
+        String line = "Не постои полиса со тој код";
+        for(String s: policiesList)
+        {
+            File file = new File(urlBuilder + s + "Policies.txt");
+            BufferedReader br;
+            br = new BufferedReader(new FileReader(file));
+    
+            while ((line = br.readLine()) != null && line != "") 
+            {
+                if((line.split("\\|")[0]).equals(policyID)) 
+                {
+                    break;
+                }
+            }
+            br.close();
+        }
+
+        return line;
+	}
+
+    public static String findEmailFromSession(String session) throws NumberFormatException, IOException {
+
+        String line = null;
+
+        File file = new File(urlBuilder + "sessions.txt");
+        BufferedReader br;
+        br = new BufferedReader(new FileReader(file));
+
+        while ((line = br.readLine()) != null && line != "") 
+        {
+            if((line.split("\\s+")[1]).equals(session)) 
+            {
+                break;
+            }
+        }
+        br.close();
+
+        return line.split("\\s+")[0];
 	}
 
 }

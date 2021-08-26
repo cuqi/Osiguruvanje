@@ -18,8 +18,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.List;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Scanner;
@@ -478,7 +476,7 @@ public class MyService {
             return new ConfirmResponse("Внесете број на полиса!", 110);
         } else {
             try {
-                int isOK = Helpers.findPolicyFromPolicyID(policyID);
+                int isOK = Helpers.payForPolicy(policyID);
                 if (isOK == 0) {
                     return new ConfirmResponse("Полисата е веќе платена!", 117);
                 } 
