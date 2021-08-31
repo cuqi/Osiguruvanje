@@ -29,8 +29,8 @@ public interface MyService {
      * 
      * @param password2
      * @param password1
+     * @param email
      * @param username
-     * @param ssn
      * @return
      *     returns java.lang.String
      * @throws NoSuchAlgorithmException_Exception
@@ -49,22 +49,10 @@ public interface MyService {
         String password1,
         @WebParam(name = "password2", targetNamespace = "")
         String password2,
-        @WebParam(name = "SSN", targetNamespace = "")
-        String ssn)
+        @WebParam(name = "email", targetNamespace = "")
+        String email)
         throws NoSuchAlgorithmException_Exception
     ;
-
-    /**
-     * 
-     * @return
-     *     returns int
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "generateNum", targetNamespace = "http://myservice/", className = "client.GenerateNum")
-    @ResponseWrapper(localName = "generateNumResponse", targetNamespace = "http://myservice/", className = "client.GenerateNumResponse")
-    @Action(input = "http://myservice/MyService/generateNumRequest", output = "http://myservice/MyService/generateNumResponse")
-    public int generateNum();
 
     /**
      * 
@@ -122,14 +110,14 @@ public interface MyService {
      * @param sessionID
      * @param householdInfo
      * @return
-     *     returns client.HouseholdResponse
+     *     returns client.QuotationResponse
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "getHouseholdQuotation", targetNamespace = "http://myservice/", className = "client.GetHouseholdQuotation")
     @ResponseWrapper(localName = "getHouseholdQuotationResponse", targetNamespace = "http://myservice/", className = "client.GetHouseholdQuotationResponse")
     @Action(input = "http://myservice/MyService/getHouseholdQuotationRequest", output = "http://myservice/MyService/getHouseholdQuotationResponse")
-    public HouseholdResponse getHouseholdQuotation(
+    public QuotationResponse getHouseholdQuotation(
         @WebParam(name = "HouseholdInfo", targetNamespace = "")
         HouseholdInfo householdInfo,
         @WebParam(name = "sessionID", targetNamespace = "")
@@ -140,14 +128,14 @@ public interface MyService {
      * @param travelInfo
      * @param sessionID
      * @return
-     *     returns client.TravelResponse
+     *     returns client.QuotationResponse
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "getTravelQuotation", targetNamespace = "http://myservice/", className = "client.GetTravelQuotation")
     @ResponseWrapper(localName = "getTravelQuotationResponse", targetNamespace = "http://myservice/", className = "client.GetTravelQuotationResponse")
     @Action(input = "http://myservice/MyService/getTravelQuotationRequest", output = "http://myservice/MyService/getTravelQuotationResponse")
-    public TravelResponse getTravelQuotation(
+    public QuotationResponse getTravelQuotation(
         @WebParam(name = "travelInfo", targetNamespace = "")
         TravelInfo travelInfo,
         @WebParam(name = "sessionID", targetNamespace = "")
@@ -155,19 +143,118 @@ public interface MyService {
 
     /**
      * 
+     * @param cascoInfo
+     * @param sessionID
+     * @return
+     *     returns client.QuotationResponse
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getCascoQuotation", targetNamespace = "http://myservice/", className = "client.GetCascoQuotation")
+    @ResponseWrapper(localName = "getCascoQuotationResponse", targetNamespace = "http://myservice/", className = "client.GetCascoQuotationResponse")
+    @Action(input = "http://myservice/MyService/getCascoQuotationRequest", output = "http://myservice/MyService/getCascoQuotationResponse")
+    public QuotationResponse getCascoQuotation(
+        @WebParam(name = "CascoInfo", targetNamespace = "")
+        CascoInfo cascoInfo,
+        @WebParam(name = "sessionID", targetNamespace = "")
+        String sessionID);
+
+    /**
+     * 
+     * @param insured
+     * @param sessionID
+     * @param householdInfo
+     * @return
+     *     returns client.BookResponse
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "bookHouseholdPolicy", targetNamespace = "http://myservice/", className = "client.BookHouseholdPolicy")
+    @ResponseWrapper(localName = "bookHouseholdPolicyResponse", targetNamespace = "http://myservice/", className = "client.BookHouseholdPolicyResponse")
+    @Action(input = "http://myservice/MyService/bookHouseholdPolicyRequest", output = "http://myservice/MyService/bookHouseholdPolicyResponse")
+    public BookResponse bookHouseholdPolicy(
+        @WebParam(name = "HouseholdInfo", targetNamespace = "")
+        HouseholdInfo householdInfo,
+        @WebParam(name = "Insured", targetNamespace = "")
+        InsuredInfo insured,
+        @WebParam(name = "sessionID", targetNamespace = "")
+        String sessionID);
+
+    /**
+     * 
+     * @param policyID
+     * @param creditCardInfo
+     * @param sessionID
+     * @return
+     *     returns client.ConfirmResponse
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "confirmPolicy", targetNamespace = "http://myservice/", className = "client.ConfirmPolicy")
+    @ResponseWrapper(localName = "confirmPolicyResponse", targetNamespace = "http://myservice/", className = "client.ConfirmPolicyResponse")
+    @Action(input = "http://myservice/MyService/confirmPolicyRequest", output = "http://myservice/MyService/confirmPolicyResponse")
+    public ConfirmResponse confirmPolicy(
+        @WebParam(name = "policyID", targetNamespace = "")
+        String policyID,
+        @WebParam(name = "creditCardInfo", targetNamespace = "")
+        CreditCardInfo creditCardInfo,
+        @WebParam(name = "sessionID", targetNamespace = "")
+        String sessionID);
+
+    /**
+     * 
+     * @param insured
+     * @param cascoInfo
+     * @param sessionID
+     * @return
+     *     returns client.BookResponse
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "bookCascoPolicy", targetNamespace = "http://myservice/", className = "client.BookCascoPolicy")
+    @ResponseWrapper(localName = "bookCascoPolicyResponse", targetNamespace = "http://myservice/", className = "client.BookCascoPolicyResponse")
+    @Action(input = "http://myservice/MyService/bookCascoPolicyRequest", output = "http://myservice/MyService/bookCascoPolicyResponse")
+    public BookResponse bookCascoPolicy(
+        @WebParam(name = "CascoInfo", targetNamespace = "")
+        CascoInfo cascoInfo,
+        @WebParam(name = "Insured", targetNamespace = "")
+        InsuredInfo insured,
+        @WebParam(name = "sessionID", targetNamespace = "")
+        String sessionID);
+
+    /**
+     * 
+     * @param eur
+     * @return
+     *     returns double
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "converter", targetNamespace = "http://myservice/", className = "client.Converter")
+    @ResponseWrapper(localName = "converterResponse", targetNamespace = "http://myservice/", className = "client.ConverterResponse")
+    @Action(input = "http://myservice/MyService/converterRequest", output = "http://myservice/MyService/converterResponse")
+    public double converter(
+        @WebParam(name = "EUR", targetNamespace = "")
+        String eur);
+
+    /**
+     * 
+     * @param insured
      * @param bookTravelInfo
      * @param sessionID
      * @return
-     *     returns java.lang.String
+     *     returns client.BookResponse
      */
     @WebMethod
     @WebResult(targetNamespace = "")
     @RequestWrapper(localName = "bookTravelPolicy", targetNamespace = "http://myservice/", className = "client.BookTravelPolicy")
     @ResponseWrapper(localName = "bookTravelPolicyResponse", targetNamespace = "http://myservice/", className = "client.BookTravelPolicyResponse")
     @Action(input = "http://myservice/MyService/bookTravelPolicyRequest", output = "http://myservice/MyService/bookTravelPolicyResponse")
-    public String bookTravelPolicy(
+    public BookResponse bookTravelPolicy(
         @WebParam(name = "BookTravelInfo", targetNamespace = "")
         TravelInfo bookTravelInfo,
+        @WebParam(name = "Insured", targetNamespace = "")
+        InsuredInfo insured,
         @WebParam(name = "sessionID", targetNamespace = "")
         String sessionID);
 

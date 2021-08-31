@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Scanner;
@@ -476,23 +477,12 @@ public class MyService {
             return new ConfirmResponse("Внесете број на полиса!", 110);
         } else {
             try {
-                int isOK = Helpers.payForPolicy(policyID);
-                if (isOK == 0) {
+                List<String> policyData = Helpers.payForPolicy(policyID);
+                if (policyData.get(0).equals("NOK")) {
                     return new ConfirmResponse("Полисата е веќе платена!", 117);
-                } 
-                // int exit = 0;
-                // List<String> arrList = Helpers.getPolicies("all");
-                // for(int i = 0; i < arrList.size(); i++) {
-                //     String [] temp = arrList.get(i).split("\\|");
-                //     if (temp[0].equals(policyID)) {
-                //         int isOK = Helpers.findPolicyFromPolicyID(policyID);
-                //         if (isOK == 0) {
-                //             return new ConfirmResponse("Полисата е веќе платена!", 117);
-                //         } 
-                //     } else {
-                //         exit = 1;
-                //     }
-                // }
+                } else {
+                    PDF.createPDF(policyID, policyData, sessionID);
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -595,8 +585,6 @@ public class MyService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                
-                
             }
     }   
 

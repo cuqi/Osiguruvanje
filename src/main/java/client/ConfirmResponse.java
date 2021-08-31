@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for householdResponse complex type.
+ * <p>Java class for confirmResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="householdResponse">
+ * &lt;complexType name="confirmResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -27,11 +27,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "householdResponse", propOrder = {
+@XmlType(name = "confirmResponse", propOrder = {
     "message",
     "code"
 })
-public class HouseholdResponse {
+public class ConfirmResponse {
 
     protected String message;
     protected int code;

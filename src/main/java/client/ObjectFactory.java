@@ -25,21 +25,29 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _GetHouseholdQuotation_QNAME = new QName("http://myservice/", "getHouseholdQuotation");
+    private final static QName _ConfirmPolicyResponse_QNAME = new QName("http://myservice/", "confirmPolicyResponse");
     private final static QName _RegisterResponse_QNAME = new QName("http://myservice/", "registerResponse");
     private final static QName _GetTravelQuotationResponse_QNAME = new QName("http://myservice/", "getTravelQuotationResponse");
-    private final static QName _GenerateNumResponse_QNAME = new QName("http://myservice/", "generateNumResponse");
+    private final static QName _ConfirmPolicy_QNAME = new QName("http://myservice/", "confirmPolicy");
     private final static QName _Register_QNAME = new QName("http://myservice/", "register");
+    private final static QName _BookHouseholdPolicyResponse_QNAME = new QName("http://myservice/", "bookHouseholdPolicyResponse");
+    private final static QName _GetCascoQuotation_QNAME = new QName("http://myservice/", "getCascoQuotation");
+    private final static QName _BookCascoPolicyResponse_QNAME = new QName("http://myservice/", "bookCascoPolicyResponse");
+    private final static QName _GetCascoQuotationResponse_QNAME = new QName("http://myservice/", "getCascoQuotationResponse");
     private final static QName _GetHouseholdQuotationResponse_QNAME = new QName("http://myservice/", "getHouseholdQuotationResponse");
     private final static QName _LoginMethodResponse_QNAME = new QName("http://myservice/", "loginMethodResponse");
     private final static QName _UnregisterResponse_QNAME = new QName("http://myservice/", "unregisterResponse");
+    private final static QName _Converter_QNAME = new QName("http://myservice/", "converter");
     private final static QName _BookTravelPolicy_QNAME = new QName("http://myservice/", "bookTravelPolicy");
     private final static QName _LoginMethod_QNAME = new QName("http://myservice/", "loginMethod");
+    private final static QName _ConverterResponse_QNAME = new QName("http://myservice/", "converterResponse");
     private final static QName _IOException_QNAME = new QName("http://myservice/", "IOException");
     private final static QName _NoSuchAlgorithmException_QNAME = new QName("http://myservice/", "NoSuchAlgorithmException");
     private final static QName _BookTravelPolicyResponse_QNAME = new QName("http://myservice/", "bookTravelPolicyResponse");
-    private final static QName _GenerateNum_QNAME = new QName("http://myservice/", "generateNum");
+    private final static QName _BookCascoPolicy_QNAME = new QName("http://myservice/", "bookCascoPolicy");
     private final static QName _Unregister_QNAME = new QName("http://myservice/", "unregister");
     private final static QName _GetTravelQuotation_QNAME = new QName("http://myservice/", "getTravelQuotation");
+    private final static QName _BookHouseholdPolicy_QNAME = new QName("http://myservice/", "bookHouseholdPolicy");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: client
@@ -73,6 +81,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetCascoQuotationResponse }
+     * 
+     */
+    public GetCascoQuotationResponse createGetCascoQuotationResponse() {
+        return new GetCascoQuotationResponse();
+    }
+
+    /**
+     * Create an instance of {@link ConverterResponse }
+     * 
+     */
+    public ConverterResponse createConverterResponse() {
+        return new ConverterResponse();
+    }
+
+    /**
      * Create an instance of {@link LoginMethod }
      * 
      */
@@ -89,11 +113,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Converter }
+     * 
+     */
+    public Converter createConverter() {
+        return new Converter();
+    }
+
+    /**
      * Create an instance of {@link Unregister }
      * 
      */
     public Unregister createUnregister() {
         return new Unregister();
+    }
+
+    /**
+     * Create an instance of {@link BookCascoPolicy }
+     * 
+     */
+    public BookCascoPolicy createBookCascoPolicy() {
+        return new BookCascoPolicy();
     }
 
     /**
@@ -121,11 +161,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GenerateNum }
+     * Create an instance of {@link BookHouseholdPolicy }
      * 
      */
-    public GenerateNum createGenerateNum() {
-        return new GenerateNum();
+    public BookHouseholdPolicy createBookHouseholdPolicy() {
+        return new BookHouseholdPolicy();
     }
 
     /**
@@ -153,6 +193,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ConfirmPolicyResponse }
+     * 
+     */
+    public ConfirmPolicyResponse createConfirmPolicyResponse() {
+        return new ConfirmPolicyResponse();
+    }
+
+    /**
+     * Create an instance of {@link ConfirmPolicy }
+     * 
+     */
+    public ConfirmPolicy createConfirmPolicy() {
+        return new ConfirmPolicy();
+    }
+
+    /**
      * Create an instance of {@link GetTravelQuotationResponse }
      * 
      */
@@ -161,11 +217,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GenerateNumResponse }
+     * Create an instance of {@link BookCascoPolicyResponse }
      * 
      */
-    public GenerateNumResponse createGenerateNumResponse() {
-        return new GenerateNumResponse();
+    public BookCascoPolicyResponse createBookCascoPolicyResponse() {
+        return new BookCascoPolicyResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetCascoQuotation }
+     * 
+     */
+    public GetCascoQuotation createGetCascoQuotation() {
+        return new GetCascoQuotation();
+    }
+
+    /**
+     * Create an instance of {@link BookHouseholdPolicyResponse }
+     * 
+     */
+    public BookHouseholdPolicyResponse createBookHouseholdPolicyResponse() {
+        return new BookHouseholdPolicyResponse();
     }
 
     /**
@@ -177,19 +249,35 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TravelResponse }
-     * 
-     */
-    public TravelResponse createTravelResponse() {
-        return new TravelResponse();
-    }
-
-    /**
      * Create an instance of {@link TravelInfo }
      * 
      */
     public TravelInfo createTravelInfo() {
         return new TravelInfo();
+    }
+
+    /**
+     * Create an instance of {@link BookResponse }
+     * 
+     */
+    public BookResponse createBookResponse() {
+        return new BookResponse();
+    }
+
+    /**
+     * Create an instance of {@link QuotationResponse }
+     * 
+     */
+    public QuotationResponse createQuotationResponse() {
+        return new QuotationResponse();
+    }
+
+    /**
+     * Create an instance of {@link CascoInfo }
+     * 
+     */
+    public CascoInfo createCascoInfo() {
+        return new CascoInfo();
     }
 
     /**
@@ -201,11 +289,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HouseholdResponse }
+     * Create an instance of {@link ConfirmResponse }
      * 
      */
-    public HouseholdResponse createHouseholdResponse() {
-        return new HouseholdResponse();
+    public ConfirmResponse createConfirmResponse() {
+        return new ConfirmResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreditCardInfo }
+     * 
+     */
+    public CreditCardInfo createCreditCardInfo() {
+        return new CreditCardInfo();
+    }
+
+    /**
+     * Create an instance of {@link InsuredInfo }
+     * 
+     */
+    public InsuredInfo createInsuredInfo() {
+        return new InsuredInfo();
     }
 
     /**
@@ -215,6 +319,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://myservice/", name = "getHouseholdQuotation")
     public JAXBElement<GetHouseholdQuotation> createGetHouseholdQuotation(GetHouseholdQuotation value) {
         return new JAXBElement<GetHouseholdQuotation>(_GetHouseholdQuotation_QNAME, GetHouseholdQuotation.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ConfirmPolicyResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "confirmPolicyResponse")
+    public JAXBElement<ConfirmPolicyResponse> createConfirmPolicyResponse(ConfirmPolicyResponse value) {
+        return new JAXBElement<ConfirmPolicyResponse>(_ConfirmPolicyResponse_QNAME, ConfirmPolicyResponse.class, null, value);
     }
 
     /**
@@ -236,12 +349,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GenerateNumResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link ConfirmPolicy }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://myservice/", name = "generateNumResponse")
-    public JAXBElement<GenerateNumResponse> createGenerateNumResponse(GenerateNumResponse value) {
-        return new JAXBElement<GenerateNumResponse>(_GenerateNumResponse_QNAME, GenerateNumResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://myservice/", name = "confirmPolicy")
+    public JAXBElement<ConfirmPolicy> createConfirmPolicy(ConfirmPolicy value) {
+        return new JAXBElement<ConfirmPolicy>(_ConfirmPolicy_QNAME, ConfirmPolicy.class, null, value);
     }
 
     /**
@@ -251,6 +364,42 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://myservice/", name = "register")
     public JAXBElement<Register> createRegister(Register value) {
         return new JAXBElement<Register>(_Register_QNAME, Register.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link BookHouseholdPolicyResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "bookHouseholdPolicyResponse")
+    public JAXBElement<BookHouseholdPolicyResponse> createBookHouseholdPolicyResponse(BookHouseholdPolicyResponse value) {
+        return new JAXBElement<BookHouseholdPolicyResponse>(_BookHouseholdPolicyResponse_QNAME, BookHouseholdPolicyResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetCascoQuotation }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "getCascoQuotation")
+    public JAXBElement<GetCascoQuotation> createGetCascoQuotation(GetCascoQuotation value) {
+        return new JAXBElement<GetCascoQuotation>(_GetCascoQuotation_QNAME, GetCascoQuotation.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link BookCascoPolicyResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "bookCascoPolicyResponse")
+    public JAXBElement<BookCascoPolicyResponse> createBookCascoPolicyResponse(BookCascoPolicyResponse value) {
+        return new JAXBElement<BookCascoPolicyResponse>(_BookCascoPolicyResponse_QNAME, BookCascoPolicyResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetCascoQuotationResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "getCascoQuotationResponse")
+    public JAXBElement<GetCascoQuotationResponse> createGetCascoQuotationResponse(GetCascoQuotationResponse value) {
+        return new JAXBElement<GetCascoQuotationResponse>(_GetCascoQuotationResponse_QNAME, GetCascoQuotationResponse.class, null, value);
     }
 
     /**
@@ -281,6 +430,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Converter }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "converter")
+    public JAXBElement<Converter> createConverter(Converter value) {
+        return new JAXBElement<Converter>(_Converter_QNAME, Converter.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link BookTravelPolicy }{@code >}}
      * 
      */
@@ -296,6 +454,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://myservice/", name = "loginMethod")
     public JAXBElement<LoginMethod> createLoginMethod(LoginMethod value) {
         return new JAXBElement<LoginMethod>(_LoginMethod_QNAME, LoginMethod.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ConverterResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "converterResponse")
+    public JAXBElement<ConverterResponse> createConverterResponse(ConverterResponse value) {
+        return new JAXBElement<ConverterResponse>(_ConverterResponse_QNAME, ConverterResponse.class, null, value);
     }
 
     /**
@@ -326,12 +493,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GenerateNum }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link BookCascoPolicy }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://myservice/", name = "generateNum")
-    public JAXBElement<GenerateNum> createGenerateNum(GenerateNum value) {
-        return new JAXBElement<GenerateNum>(_GenerateNum_QNAME, GenerateNum.class, null, value);
+    @XmlElementDecl(namespace = "http://myservice/", name = "bookCascoPolicy")
+    public JAXBElement<BookCascoPolicy> createBookCascoPolicy(BookCascoPolicy value) {
+        return new JAXBElement<BookCascoPolicy>(_BookCascoPolicy_QNAME, BookCascoPolicy.class, null, value);
     }
 
     /**
@@ -350,6 +517,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://myservice/", name = "getTravelQuotation")
     public JAXBElement<GetTravelQuotation> createGetTravelQuotation(GetTravelQuotation value) {
         return new JAXBElement<GetTravelQuotation>(_GetTravelQuotation_QNAME, GetTravelQuotation.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link BookHouseholdPolicy }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://myservice/", name = "bookHouseholdPolicy")
+    public JAXBElement<BookHouseholdPolicy> createBookHouseholdPolicy(BookHouseholdPolicy value) {
+        return new JAXBElement<BookHouseholdPolicy>(_BookHouseholdPolicy_QNAME, BookHouseholdPolicy.class, null, value);
     }
 
 }

@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="BookTravelInfo" type="{http://myservice/}travelInfo" minOccurs="0"/>
+ *         &lt;element name="Insured" type="{http://myservice/}insuredInfo" minOccurs="0"/>
  *         &lt;element name="sessionID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -30,12 +31,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "bookTravelPolicy", propOrder = {
     "bookTravelInfo",
+    "insured",
     "sessionID"
 })
 public class BookTravelPolicy {
 
     @XmlElement(name = "BookTravelInfo")
     protected TravelInfo bookTravelInfo;
+    @XmlElement(name = "Insured")
+    protected InsuredInfo insured;
     protected String sessionID;
 
     /**
@@ -60,6 +64,30 @@ public class BookTravelPolicy {
      */
     public void setBookTravelInfo(TravelInfo value) {
         this.bookTravelInfo = value;
+    }
+
+    /**
+     * Gets the value of the insured property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link InsuredInfo }
+     *     
+     */
+    public InsuredInfo getInsured() {
+        return insured;
+    }
+
+    /**
+     * Sets the value of the insured property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link InsuredInfo }
+     *     
+     */
+    public void setInsured(InsuredInfo value) {
+        this.insured = value;
     }
 
     /**

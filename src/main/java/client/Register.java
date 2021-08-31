@@ -3,7 +3,6 @@ package client;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -20,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="username" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="password1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="password2" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="SSN" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,15 +33,14 @@ import javax.xml.bind.annotation.XmlType;
     "username",
     "password1",
     "password2",
-    "ssn"
+    "email"
 })
 public class Register {
 
     protected String username;
     protected String password1;
     protected String password2;
-    @XmlElement(name = "SSN")
-    protected String ssn;
+    protected String email;
 
     /**
      * Gets the value of the username property.
@@ -117,27 +115,27 @@ public class Register {
     }
 
     /**
-     * Gets the value of the ssn property.
+     * Gets the value of the email property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getSSN() {
-        return ssn;
+    public String getEmail() {
+        return email;
     }
 
     /**
-     * Sets the value of the ssn property.
+     * Sets the value of the email property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setSSN(String value) {
-        this.ssn = value;
+    public void setEmail(String value) {
+        this.email = value;
     }
 
 }

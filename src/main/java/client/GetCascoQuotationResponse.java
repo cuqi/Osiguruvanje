@@ -8,16 +8,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for generateNumResponse complex type.
+ * <p>Java class for getCascoQuotationResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="generateNumResponse">
+ * &lt;complexType name="getCascoQuotationResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="return" type="{http://myservice/}quotationResponse" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,27 +27,35 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "generateNumResponse", propOrder = {
+@XmlType(name = "getCascoQuotationResponse", propOrder = {
     "_return"
 })
-public class GenerateNumResponse {
+public class GetCascoQuotationResponse {
 
     @XmlElement(name = "return")
-    protected int _return;
+    protected QuotationResponse _return;
 
     /**
      * Gets the value of the return property.
      * 
+     * @return
+     *     possible object is
+     *     {@link QuotationResponse }
+     *     
      */
-    public int getReturn() {
+    public QuotationResponse getReturn() {
         return _return;
     }
 
     /**
      * Sets the value of the return property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link QuotationResponse }
+     *     
      */
-    public void setReturn(int value) {
+    public void setReturn(QuotationResponse value) {
         this._return = value;
     }
 

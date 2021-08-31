@@ -189,8 +189,9 @@ public class Helpers {
         return returnsesh;
 	}
 
-    public static int payForPolicy(String policyID) throws NumberFormatException, IOException {
+    public static List<String> payForPolicy(String policyID) throws NumberFormatException, IOException {
 
+        List<String> mylist = new ArrayList<String>();
         String line = null;
         int isOK = 0;
         for(String s: policiesList)
@@ -205,10 +206,15 @@ public class Helpers {
                 if((line.split("\\|")[0]).equals(policyID)) 
                 {
                     if (line.split("\\|")[9].equals("OP")) {
+                        String[] elements = line.split("\\|");
+                        for(int i = 0; i < elements.length; i++) {
+                            mylist.add(elements[i]);
+                        }
                         isOK = 1;
                         inputBuffer.append(line.replace("OP", "CL"));
                         inputBuffer.append("\n");
                     } else {
+                        mylist.add("NOK");
                         isOK = 0;
                     }
                 } else {
@@ -225,7 +231,7 @@ public class Helpers {
             br.close();
         }
 
-        return isOK;
+        return mylist;
 	}
 
     public static String findPolicyFromPolicyID(String policyID) throws NumberFormatException, IOException {

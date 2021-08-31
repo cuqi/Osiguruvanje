@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://myservice/}travelResponse" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://myservice/}quotationResponse" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,17 +33,17 @@ import javax.xml.bind.annotation.XmlType;
 public class GetTravelQuotationResponse {
 
     @XmlElement(name = "return")
-    protected TravelResponse _return;
+    protected QuotationResponse _return;
 
     /**
      * Gets the value of the return property.
      * 
      * @return
      *     possible object is
-     *     {@link TravelResponse }
+     *     {@link QuotationResponse }
      *     
      */
-    public TravelResponse getReturn() {
+    public QuotationResponse getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class GetTravelQuotationResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link TravelResponse }
+     *     {@link QuotationResponse }
      *     
      */
-    public void setReturn(TravelResponse value) {
+    public void setReturn(QuotationResponse value) {
         this._return = value;
     }
 
