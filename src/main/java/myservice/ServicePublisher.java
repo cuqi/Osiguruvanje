@@ -2,19 +2,21 @@ package myservice;
 
 import javax.xml.ws.Endpoint;
 
+import soapService.*;
+
 public class ServicePublisher {
     public static void main(String[] args) {
 
         
 
-        final String url = "http://localhost:8080/myservice";
+        final String url = "http://localhost:8000/myservice";
         System.out.println("Publishing Service at endpoint " + url);
 
         Endpoint.publish(url, new MyService());
         
         // MyServiceService service = new MyServiceService();
-        // client.MyService port = (client.MyService) service.getMyServicePort();
-        // System.out.println(port.generateNum());
+        // soapService.MyService port = service.getMyServicePort();
+        // System.out.println(port.converter("10"));
 
         // try {
         //     System.out.println(port.loginMethod("test_user", "pass123"));
