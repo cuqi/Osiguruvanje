@@ -3,6 +3,9 @@ package myservice;
 import myservice.REST.Helpers;
 
 import javax.jws.WebService;
+
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 
@@ -17,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -96,7 +101,7 @@ public class MyService {
             return "Внесените пасворди се различни";
         } else {
             try {
-                File inputFile = new File("src\\main\\java\\data\\registeredUsers.txt");
+                File inputFile = new File("registeredUsers.txt");
                 File tempFile = new File("src\\main\\java\\data\\tempusers.txt");
                 BufferedReader reader = new BufferedReader(new FileReader(inputFile));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
@@ -147,51 +152,72 @@ public class MyService {
     @WebMethod 
     public QuotationResponse getTravelQuotation(@WebParam(name = "travelInfo")TravelInfo travelInfo, @WebParam(name = "sessionID")String sessionID) {
         double premium = 0.0;
-        if (sessionID.equals("")) {
-            return new QuotationResponse("No sessionID", 101, 0);
-        } else if (checkSessionID(sessionID) == 0) {
-            return new QuotationResponse("Session ID e погрешно!", 102, 0);
+        // if (sessionID.equals("")) {
+        //     return new QuotationResponse("No sessionID", 101, 0);
+        // } else if (checkSessionID(sessionID) == 0) {
+        //     return new QuotationResponse("Session ID e погрешно!", 102, 0);
+        // }
+
+        if (travelInfo.days < 3 || travelInfo.days > 365) {
+            return new QuotationResponse("Минимален број на денови е 3, максимален е 365", 109, 0);
+        }
+
+        if (travelInfo.numPeople > 10) {
+            return new QuotationResponse("Максимален број на осигурани лица е 10", 106, 0);
         }
 
         if (travelInfo.type == null) {
-            return new QuotationResponse("Ве молиме внесете го типот на патничка полиса(INDIVIDUAL, FAMILY, STUDENT, GROUP, BUSINESS)", 110, 0);
+            return new QuotationResponse("Ве молиме внесете го видот на патничкото осигурување(INDIVIDUAL, FAMILY, STUDENT, GROUP, BUSINESS)", 110, 0);
         } else {
             switch(travelInfo.type) {
                 case INDIVIDUAL:
-                    premium += 100;
+                    premium += travelInfo.days * 41;
                     break;
                 case FAMILY:
-                    premium += 110;
+                    if (travelInfo.numPeople < 2) {
+                        return new QuotationResponse("За семејно патничко осигурување ве молиме внесете над едно лице", 108, 0);
+                    }
+                    premium += travelInfo.days * 35;
                     break;
                 case STUDENT:
-                    premium += 80;
+                    premium += travelInfo.days * 34;
                     break;
                 case GROUP:
-                    premium += 90;
+                if (travelInfo.numPeople < 5) {
+                    return new QuotationResponse("За групно патничко осигурување ве молиме внесете над четири лице", 107, 0);
+                }
+                    premium += travelInfo.days * 33;
                     break;
                 case BUSINESS:
-                    premium += 95;
+                    premium += travelInfo.days * 41;
                     break;
             }
         }
         
         if (travelInfo.cover == null) {
-            return new QuotationResponse("Ве молиме внесете го покритието за патничката полиса(VISA, CLASSIC, CLASSIC_PLUS)", 111, 0);
+            return new QuotationResponse("Ве молиме внесете го типот на покритие(CLASSIC, VISA, VIP)", 111, 0);
         } else {
             switch(travelInfo.cover) {
-                case VISA:
-                    premium += travelInfo.days * 0.8;
-                    break;
                 case CLASSIC:
-                    premium += travelInfo.days * 1;
                     break;
-                case CLASSIC_PLUS:
-                    premium += travelInfo.days * 1.25;
+                case VISA:
+                    premium += premium * 0.1;
+                    break;
+                case VIP:
+                    premium += premium * 0.27;
                     break;
             }
         }
+
+        if (travelInfo.isbelow18) {
+            premium -= premium * 0.1;
+        }
+
+        if (travelInfo.isabove65) {
+            premium += premium * 0.05;
+        }
         
-        return new QuotationResponse("Премијата за полисата изнесува: " + String.valueOf((int)premium + "ЕУР"), 100, (float) premium);
+        return new QuotationResponse("Premijata изнесува: " + String.valueOf((int)premium + " денари."), 100, (int) Math.abs(premium));
     }
 
     @WebMethod 
@@ -245,6 +271,59 @@ public class MyService {
                 break;
             default:
                 return new QuotationResponse("Ве молиме внесете 1, 3 или 5 во полето за должина на договорот.", 113, 0);
+        }
+        
+        return new QuotationResponse("Висината на премијата е: " + String.valueOf((int)premium) + " ЕУР", 100, (int) premium);
+    }
+
+    @WebMethod 
+    public QuotationResponse getAOQuotation(@WebParam(name = "AOInfo")AOInfo aoInfo, @WebParam(name = "ssn") String ssn,  @WebParam(name = "sessionID")String sessionID) {
+        double premium = 0;
+        
+        if (aoInfo.regNum == null) {
+           return new QuotationResponse("Внесете ја регистрацијата на возилото", 101, Float.valueOf(0));
+        }
+
+        if (aoInfo.chassis == null) {
+            return new QuotationResponse("Внесете ја шасијата на возилото", 102, Float.valueOf(0));
+        }
+        int age = getAgeFromSSN(ssn);
+        try {
+            int cat = DigitalOceanDatabase.GetVehicleCategory(aoInfo.regNum, aoInfo.chassis);
+
+            switch(cat) {
+                case 5:
+                    premium += 6000;
+                    break;
+                case 6: 
+                    premium += 7000;
+                    break;
+                case 7:
+                    premium += 8000;
+                    break;
+                case 8:
+                    premium += 9000;
+                    break;
+                case 9:
+                    premium += 10000;
+                    break;
+                default:
+                    premium = 0;
+                    return new QuotationResponse("Error", 999, 0);
+            } 
+
+            if (age < 22 || age > 70) {
+                premium += premium * 0.15;
+            } else {
+                premium += premium * 0.1;
+            }
+            
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         
         return new QuotationResponse("Висината на премијата е: " + String.valueOf((int)premium) + " ЕУР", 100, (int) premium);
@@ -610,5 +689,6 @@ public class MyService {
         }
         return found;
     }
+
 
 }

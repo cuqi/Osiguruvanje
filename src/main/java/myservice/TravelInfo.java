@@ -11,7 +11,7 @@ enum TypeTravelPolicy {
 enum TypeCover {
     VISA,
     CLASSIC,
-    CLASSIC_PLUS
+    VIP
 }
 
 public class TravelInfo {
@@ -19,15 +19,21 @@ public class TravelInfo {
     public TypeCover cover;
     public int days;
     public String country;
+    public int numPeople;
+    boolean isbelow18;
+    boolean isabove65;
     
 
     public TravelInfo() {
     }
 
-    public TravelInfo(TypeTravelPolicy type, TypeCover cover, int days, String country) {
+    public TravelInfo(TypeTravelPolicy type, TypeCover cover, int days, String country, int numPeople, boolean isbelow18, boolean isabove65) {
         this.type = type;
         this.cover = cover;
         this.days = days;
         this.country = country;
+        this.numPeople = numPeople;
+        this.isabove65 = isabove65;
+        this.isbelow18 = isbelow18;
     }
 }

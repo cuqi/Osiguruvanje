@@ -1,64 +1,109 @@
 package myservice;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
+
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 import myservice.REST.Helpers;
 
 
 
 public class test {
-    public static void main(String[] args) throws NumberFormatException, IOException {
+    public static void main(String[] args) throws NumberFormatException, IOException, SQLException {
+        
+        int cat = DigitalOceanDatabase.GetVehicleCategory("SK-399-KO", "WMAT325800M209024");
+        System.out.println("THE vehCat is: " + cat);
 
-        String policyID = "CSC1001";
-        // String [] elements = policyID.split("\\|");
-        // System.out.println(elements[0] + " " + elements[1]);
+        
+    }
 
-        List<String> arrList = Helpers.getPolicies("all");
-        for(int i = 0; i < arrList.size(); i++) {
-            String [] temp = arrList.get(i).split("\\|");
-            if (temp[0].equals(policyID)) {
-                System.out.println("IT IS OK");
-            }
+
+    // public static Connection connectToDatabase() throws SQLException, FileNotFoundException, IOException {
+    //     Properties creds = new Properties();
+    //     try (FileReader in = new FileReader("src\\main\\java\\config\\creds.properties")) {
+    //         creds.load(in);
+    //     }
+    //     MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
+    //     dataSource.setUser(creds.getProperty("digitaloceancred1"));
+    //     dataSource.setPassword(creds.getProperty("digitaloceancred2"));
+    //     dataSource.setServerName("db-mysql-fra1-insurance-do-user-10143551-0.b.db.ondigitalocean.com");
+    //     dataSource.setPort(25060);
+    //     dataSource.setDatabaseName("defaultdb");
+    //     dataSource.setUseSSL(true);
+    //     dataSource.setTrustCertificateKeyStoreUrl("file:src\\main\\java\\config\\myTrustStore");
+    //     dataSource.setTrustCertificateKeyStorePassword(creds.getProperty("digitaloceancred3"));
+
+    //     Connection conn = null;
+    //     try {
+    //         conn = dataSource.getConnection();
+    //         if (conn != null) {
+    //             ResultSet rs = null;
+    //             PreparedStatement ps = null;
+    //             String query = "select name from users where email = 'krstik.vlatko@yahoo.com'";
+    //             String result = "";
+    //             try { 
+    //                 ps = conn.prepareStatement(query);         
+    //                 rs = ps.executeQuery();
+        
+    //                 if (rs.next()) {
+    //                     result = rs.getString("name");
+    //                     System.out.println(result);
+    //                 }
+    //             } catch (SQLException e) {
+    //                 e.printStackTrace();
+    //             }
+
+    //             try {
+    //                 ps.close();
+    //                 rs.close();
+    //             } catch(SQLException e) {
+    //                 e.printStackTrace();
+    //             }
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+
+
+    //     try {
+    //         conn.close();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     return conn;
+    // }
+
+    public static Connection connectToDatabase() throws SQLException, FileNotFoundException, IOException {
+        Properties creds = new Properties();
+        try (FileReader in = new FileReader("src\\main\\java\\config\\creds.properties")) {
+            creds.load(in);
         }
-        // System.out.println(arrList.contains("CSC1001|616.0|FULL|NEW|Vladimir|Krstikj|1998-12-08</br>"));
-        // boolean ok = Helpers.getPolicies("casco").contains(policyID);
-        // System.out.println(ok);
-        // try {
-        //     int isOK = Helpers.findPolicyFromPolicyID(policyID);
-        //     System.out.println(isOK);
-        //     // if (Helpers.getPolicies("all").contains(policyID)) {
-        //     //     String pol1 = Helpers.findPolicyFromPolicyID(policyID);
-        //     //     System.out.println(pol1);
-        //     // } else {
-        //     //     System.out.println("kurac");
-        //     // }
-        // } catch (NumberFormatException e) {
-        //     e.printStackTrace();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+        MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
+        dataSource.setUser(creds.getProperty("digitaloceancred1"));
+        dataSource.setPassword(creds.getProperty("digitaloceancred2"));
+        dataSource.setServerName("db-mysql-fra1-insurance-do-user-10143551-0.b.db.ondigitalocean.com");
+        dataSource.setPort(25060);
+        dataSource.setDatabaseName("defaultdb");
+        dataSource.setUseSSL(true);
+        dataSource.setTrustCertificateKeyStoreUrl("file:src\\main\\java\\config\\myTrustStore");
+        dataSource.setTrustCertificateKeyStorePassword(creds.getProperty("digitaloceancred3"));
 
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        // SimpleDateFormat formatter = new SimpleDateFormat("MM/yyyy");
-        // Date date = new Date();
-        // String todaysDate = formatter.format(date); 
-        // System.out.println(todaysDate);
-
-
-        // BraintreeGateway gateway = new BraintreeGateway("access_token$sandbox$dz75b273p2gnb456$5af09ab9ecb4cdaef5b70a3f7f6bebfa");
-        // TransactionRequest request = new TransactionRequest()
-        // .amount(new BigDecimal(100))
-        // .paymentMethodNonce("online");
-
-        // Result<Transaction> saleResult = gateway.transaction().sale(request);
-
-        // if (saleResult.isSuccess()) {
-        //     Transaction transaction = saleResult.getTarget();
-        //     System.out.println("SuccessID " + transaction.getId());
-        // } else {
-        //     System.out.println("Message: " + saleResult.getMessage());
-        // }
-
+        return conn;
     }
 }

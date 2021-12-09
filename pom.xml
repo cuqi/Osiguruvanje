@@ -135,6 +135,14 @@
   <version>1.14</version>
 </dependency>
 
+<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+	<version>8.0.16</version>
+</dependency>
+<!-- Thanks for using https://jar-download.com -->
+
+
  </dependencies>
 
 	<build>
