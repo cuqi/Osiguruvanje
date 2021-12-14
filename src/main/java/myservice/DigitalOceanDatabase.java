@@ -64,7 +64,35 @@ public class DigitalOceanDatabase {
             }
         }
         
+        return result;
+    }
 
+    public static int CheckSessionID(String sessionID) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+            ResultSet rs = null;
+            PreparedStatement ps = null;
+            String query = "select count(*) as sessionFound from sessions where sessionid = '" + sessionID + "';";
+
+            try {
+                ps = conn.prepareStatement(query);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    result = rs.getInt("sessionFound");
+                }
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+                rs.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
         
         return result;
     }

@@ -152,11 +152,12 @@ public class MyService {
     @WebMethod 
     public QuotationResponse getTravelQuotation(@WebParam(name = "travelInfo")TravelInfo travelInfo, @WebParam(name = "sessionID")String sessionID) {
         double premium = 0.0;
-        // if (sessionID.equals("")) {
-        //     return new QuotationResponse("No sessionID", 101, 0);
-        // } else if (checkSessionID(sessionID) == 0) {
-        //     return new QuotationResponse("Session ID e погрешно!", 102, 0);
-        // }
+
+        if (sessionID.equals("")) {
+            return new QuotationResponse("No sessionID", 101, 0);
+        } else if (checkSessionID(sessionID) == 0) {
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
+        }
 
         if (travelInfo.days < 3 || travelInfo.days > 365) {
             return new QuotationResponse("Минимален број на денови е 3, максимален е 365", 109, 0);
@@ -667,28 +668,38 @@ public class MyService {
             }
     }   
 
+    // public static int checkSessionID(String sessionID) {
+    //     int found = 0;
+    //     try {
+    //         File file = new File("src\\main\\java\\data\\sessions.txt");
+    //         Scanner scanner = new Scanner(file);
+    //         while(scanner.hasNextLine()) {
+    //             String line = scanner.nextLine();
+    //             String sessionInfo[] = line.split(" ");
+    //             if (sessionID.equals(sessionInfo[1])) {
+    //                 found = 1;
+    //                 break;
+    //             } else {
+    //                 found = 0;
+    //             }
+    //         }
+    //         scanner.close();
+    //     } catch (FileNotFoundException e) {
+    //         found = 0;
+    //         e.printStackTrace();
+    //     }
+    //     return found;
+    // }
+
     public static int checkSessionID(String sessionID) {
         int found = 0;
         try {
-            File file = new File("src\\main\\java\\data\\sessions.txt");
-            Scanner scanner = new Scanner(file);
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String sessionInfo[] = line.split(" ");
-                if (sessionID.equals(sessionInfo[1])) {
-                    found = 1;
-                    break;
-                } else {
-                    found = 0;
-                }
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            found = 0;
+            found = DigitalOceanDatabase.CheckSessionID(sessionID);
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
         return found;
     }
-
-
 }
