@@ -1,8 +1,9 @@
 package myservice;
 
 enum TypeObject {
-    HOUSE,
-    APARTMENT
+    RESIDENCE,
+    BUSINESS,
+    PORTABLE
 }
 
 enum TypeHouseholdCover {

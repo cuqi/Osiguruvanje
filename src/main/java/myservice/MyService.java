@@ -26,137 +26,138 @@ import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Scanner;
 import java.util.Base64.Encoder;
 
 @WebService
 public class MyService {
 
-    @WebMethod // soap 1.1 
-    public String loginMethod(@WebParam(name = "username")String username, @WebParam(name = "password")String password) throws NoSuchAlgorithmException {
-        try {
-            System.out.println("Working Directory = " + System.getProperty("user.dir"));
-            File file = new File("src\\main\\java\\data\\registeredUsers.txt");
-            Scanner scanner = new Scanner(file);
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(
-                password.getBytes(StandardCharsets.UTF_8)
-            );
-            String hashedPassword = bytesToHex(encodedhash);
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String userInfo[] = line.split(" ");
-                if (username.equals(userInfo[0]) && hashedPassword.equals(userInfo[1])) {
-                    scanner.close();
-                    SecureRandom random = new SecureRandom();
-                    byte bytes[] = new byte[20];
-                    random.nextBytes(bytes);
-                    Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-                    String token = encoder.encodeToString(bytes);
+    // @WebMethod // soap 1.1 
+    // public String loginMethod(@WebParam(name = "username")String username, @WebParam(name = "password")String password) throws NoSuchAlgorithmException {
+    //     try {
+    //         System.out.println("Working Directory = " + System.getProperty("user.dir"));
+    //         File file = new File("src\\main\\java\\data\\registeredUsers.txt");
+    //         Scanner scanner = new Scanner(file);
+    //         MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    //         byte[] encodedhash = digest.digest(
+    //             password.getBytes(StandardCharsets.UTF_8)
+    //         );
+    //         String hashedPassword = bytesToHex(encodedhash);
+    //         while(scanner.hasNextLine()) {
+    //             String line = scanner.nextLine();
+    //             String userInfo[] = line.split(" ");
+    //             if (username.equals(userInfo[0]) && hashedPassword.equals(userInfo[1])) {
+    //                 scanner.close();
+    //                 SecureRandom random = new SecureRandom();
+    //                 byte bytes[] = new byte[20];
+    //                 random.nextBytes(bytes);
+    //                 Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+    //                 String token = encoder.encodeToString(bytes);
 
-                    FileWriter file2 = new FileWriter("src\\main\\java\\data\\sessions.txt", true);
-                    file2.write("\n" + userInfo[2] + " " + token);
-                    file2.close();
-                    return token;
-                } 
-            }
-            scanner.close();
-            return "There was an error!";
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "File cannot be found";
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return e.getMessage();
-        }
-    }
+    //                 FileWriter file2 = new FileWriter("src\\main\\java\\data\\sessions.txt", true);
+    //                 file2.write("\n" + userInfo[2] + " " + token);
+    //                 file2.close();
+    //                 return token;
+    //             } 
+    //         }
+    //         scanner.close();
+    //         return "There was an error!";
+    //     } catch (FileNotFoundException e) {
+    //         e.printStackTrace();
+    //         return "File cannot be found";
+    //     } catch (IOException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //         return e.getMessage();
+    //     }
+    // }
 
-    @WebMethod
-    public String register(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2, @WebParam(name = "email")String email) throws NoSuchAlgorithmException {
-        try{
-            FileWriter file = new FileWriter("src\\main\\java\\data\\registeredUsers.txt", true);
-            String newUser = "";
-            if (password1.equals(password2)) {
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] encodedhash = digest.digest(
-                password1.getBytes(StandardCharsets.UTF_8)
-                );
-                String hashedPassword = bytesToHex(encodedhash);
-                newUser = username + " " + hashedPassword + " " + email + "\r\n";
-            } 
-            file.write(newUser);
-            file.close();
-            return "Успешно се регистриравте!";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Неуспешно, настана грешка!";
-        }
-    }
+    // @WebMethod
+    // public String register(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2, @WebParam(name = "email")String email) throws NoSuchAlgorithmException {
+    //     try{
+    //         FileWriter file = new FileWriter("src\\main\\java\\data\\registeredUsers.txt", true);
+    //         String newUser = "";
+    //         if (password1.equals(password2)) {
+    //             MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    //             byte[] encodedhash = digest.digest(
+    //             password1.getBytes(StandardCharsets.UTF_8)
+    //             );
+    //             String hashedPassword = bytesToHex(encodedhash);
+    //             newUser = username + " " + hashedPassword + " " + email + "\r\n";
+    //         } 
+    //         file.write(newUser);
+    //         file.close();
+    //         return "Успешно се регистриравте!";
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         return "Неуспешно, настана грешка!";
+    //     }
+    // }
 
-    @WebMethod
-    public String unregister(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2) throws IOException, NoSuchAlgorithmException{
-        boolean flag = false;
-        if(!password1.equals(password2)) {
-            return "Внесените пасворди се различни";
-        } else {
-            try {
-                File inputFile = new File("registeredUsers.txt");
-                File tempFile = new File("src\\main\\java\\data\\tempusers.txt");
-                BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-                String currentLine;
+    // @WebMethod
+    // public String unregister(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2) throws IOException, NoSuchAlgorithmException{
+    //     boolean flag = false;
+    //     if(!password1.equals(password2)) {
+    //         return "Внесените пасворди се различни";
+    //     } else {
+    //         try {
+    //             File inputFile = new File("registeredUsers.txt");
+    //             File tempFile = new File("src\\main\\java\\data\\tempusers.txt");
+    //             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+    //             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+    //             String currentLine;
                 
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] encodedhash = digest.digest(
-                password1.getBytes(StandardCharsets.UTF_8)
-                );
-                String hashedPassword = bytesToHex(encodedhash);
+    //             MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    //             byte[] encodedhash = digest.digest(
+    //             password1.getBytes(StandardCharsets.UTF_8)
+    //             );
+    //             String hashedPassword = bytesToHex(encodedhash);
 
-                if((currentLine = reader.readLine()) != null) {
-                    String[] entries = currentLine.split(" ");
-                    // System.out.println(entries[0] + " " + entries[1]);
-                    if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
-                        flag = true;
-                    } else {
-                        writer.write(currentLine);
-                    }
-                }
+    //             if((currentLine = reader.readLine()) != null) {
+    //                 String[] entries = currentLine.split(" ");
+    //                 // System.out.println(entries[0] + " " + entries[1]);
+    //                 if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
+    //                     flag = true;
+    //                 } else {
+    //                     writer.write(currentLine);
+    //                 }
+    //             }
 
-                while((currentLine = reader.readLine()) != null) {
-                    String[] entries = currentLine.split(" ");
-                    if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
-                        flag = true;
-                        continue;
-                    } 
-                    writer.write(System.getProperty("line.separator") + currentLine);
-                }
-                writer.close(); 
-                reader.close(); 
+    //             while((currentLine = reader.readLine()) != null) {
+    //                 String[] entries = currentLine.split(" ");
+    //                 if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
+    //                     flag = true;
+    //                     continue;
+    //                 } 
+    //                 writer.write(System.getProperty("line.separator") + currentLine);
+    //             }
+    //             writer.close(); 
+    //             reader.close(); 
                 
-                inputFile.delete();
-                tempFile.renameTo(inputFile);
+    //             inputFile.delete();
+    //             tempFile.renameTo(inputFile);
 
-                if (flag) {
-                    return "User-от е избришан";
-                } else {
-                    return "Погрешен username или password";
-                }
+    //             if (flag) {
+    //                 return "User-от е избришан";
+    //             } else {
+    //                 return "Погрешен username или password";
+    //             }
 
-                } catch (FileNotFoundException e) {
-                    return "Server error";
-                }
-        }
-    }
+    //             } catch (FileNotFoundException e) {
+    //                 return "Server error";
+    //             }
+    //     }
+    // }
 
     @WebMethod 
     public QuotationResponse getTravelQuotation(@WebParam(name = "travelInfo")TravelInfo travelInfo, @WebParam(name = "sessionID")String sessionID) {
         double premium = 0.0;
-        // if (sessionID.equals("")) {
-        //     return new QuotationResponse("No sessionID", 101, 0);
-        // } else if (checkSessionID(sessionID) == 0) {
-        //     return new QuotationResponse("Session ID e погрешно!", 102, 0);
-        // }
+        if (sessionID.equals("")) {
+            return new QuotationResponse("No sessionID", 101, 0);
+        } else if (checkSessionID(sessionID) == 0) {
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
+        }
 
         if (travelInfo.days < 3 || travelInfo.days > 365) {
             return new QuotationResponse("Минимален број на денови е 3, максимален е 365", 109, 0);
@@ -217,7 +218,7 @@ public class MyService {
             premium += premium * 0.05;
         }
         
-        return new QuotationResponse("Premijata изнесува: " + String.valueOf((int)premium + " денари."), 100, (int) Math.abs(premium));
+        return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium + " денари."), 100, (int) Math.abs(premium));
     }
 
     @WebMethod 
@@ -229,18 +230,21 @@ public class MyService {
             return new QuotationResponse("Session ID e погрешно!", 102, 0);
         }
 
-        if (householdInfo.typeObject == null) {
-            return new QuotationResponse("Ве молиме внесете го типот на објектот(HOUSE, APARTMENT)", 111, 0);
-        } else {
-            if (householdInfo.typeObject.equals(TypeObject.HOUSE)) {
-                premium += 12.0;
-            } else if (householdInfo.typeObject.equals(TypeObject.APARTMENT)) {
-                premium += 10.0;
-            }
+        if (householdInfo.areaOfObject < 30) {
+            return new QuotationResponse("Ве молиме внесете повеќе од 30 квадратни метри", 114, 0);
         }
 
-        // dodavanje na premijata vo zavisnost od kvadraturata;
-        premium += householdInfo.areaOfObject * 0.25;
+        if (householdInfo.typeObject == null) {
+            return new QuotationResponse("Ве молиме внесете го типот на објектот(RESIDENCE, APARTMENT, PORTABLE)", 111, 0);
+        } else {
+            if (householdInfo.typeObject.equals(TypeObject.RESIDENCE)) {
+                premium += (householdInfo.areaOfObject * 20) - householdInfo.areaOfObject * 3/10;
+            } else if (householdInfo.typeObject.equals(TypeObject.BUSINESS)) {
+                premium += householdInfo.areaOfObject * 23 - householdInfo.areaOfObject * 3/10;
+            } else if (householdInfo.typeObject.equals(TypeObject.PORTABLE)) {
+                premium += householdInfo.areaOfObject * 24 - householdInfo.areaOfObject * 3/10;
+            }
+        }
 
         // dodavanje na premijata vo zavisnost od tipot na pokritieto
         if (householdInfo.typeHouseholdCover == null) {
@@ -248,32 +252,32 @@ public class MyService {
         } else {
             switch(householdInfo.typeHouseholdCover) {
                 case STANDARD:
-                    premium += 25;
+                    premium += premium * 0.1;
                     break;
                 case COMFORT:
-                    premium += 40;
+                    premium += premium * 0.4;
                     break;
                 case MEGA:
-                    premium += 50;
+                    premium += premium * 0.8;
                     break;
             }
         }
 
         switch(householdInfo.contractLenght) {
             case 1:
-                premium -= (premium*10)/100;
+                premium -= (premium*5)/100;
                 break;
             case 3:
-                premium -= (premium*15)/100;
+                premium -= (premium*7.5)/100;
                 break;
             case 5:
-                premium -= (premium*20)/100;
+                premium -= (premium*10)/100;
                 break;
             default:
                 return new QuotationResponse("Ве молиме внесете 1, 3 или 5 во полето за должина на договорот.", 113, 0);
         }
         
-        return new QuotationResponse("Висината на премијата е: " + String.valueOf((int)premium) + " ЕУР", 100, (int) premium);
+        return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium) + " денари.", 100, (int) premium);
     }
 
     @WebMethod 
@@ -326,7 +330,7 @@ public class MyService {
             e.printStackTrace();
         }
         
-        return new QuotationResponse("Висината на премијата е: " + String.valueOf((int)premium) + " ЕУР", 100, (int) premium);
+        return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium) + " денари.", 100, (int) premium);
     }
 
     @WebMethod 
@@ -384,8 +388,42 @@ public class MyService {
         return new QuotationResponse("Висината на премијата е: " + String.valueOf((int)premium) + " ЕУР", 100, (int) premium);
     }
 
+    @WebMethod 
+    public QuotationResponse getAccidentQuotation(@WebParam(name = "AccidentInfo")AccidentInfo accidentInfo, @WebParam(name = "sessionID")String sessionID) {
+        double premium = 0;
+        if (sessionID.equals("")) {
+            return new QuotationResponse("Ви недостасува број на сесија!", 101, 0);
+        } else if (checkSessionID(sessionID) == 0){
+            return new QuotationResponse("Session ID e погрешно!", 102, 0);
+        }
+        Date now = new Date();
+        if (accidentInfo.startDate.before(now)) {
+            return new QuotationResponse("Не можете да внесете датум пред денешниот!", 132, (int) premium);
+        }
+        switch(accidentInfo.pack) {
+            case 1:
+                premium = 150;
+                break;
+            case 2:
+                premium = 200;
+                break;
+            case 3:
+                premium = 300;
+                break;
+            default:
+                premium = 0;
+                return new QuotationResponse("Внесете 1, 2 или 3 за пакет на осигурување на несреќен случај!", 131, (int) premium);
+        }
+
+        if (accidentInfo.isStudent) {
+            premium -= premium * 0.2;
+        }
+        
+        return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium) + " денари" + accidentInfo.startDate.toString(), 100, (int) premium);
+    }
+
     @WebMethod
-    public BookResponse bookTravelPolicy(@WebParam(name = "BookTravelInfo")TravelInfo bookTravelInfo, @WebParam(name = "Insured")InsuredInfo insured, @WebParam(name = "sessionID")String sessionID) {
+    public BookResponse bookTravelPolicy(@WebParam(name = "BookTravelInfo")TravelInfo bookTravelInfo, @WebParam(name = "Owner")InsuredInfo owner, @WebParam(name = "Insured")InsuredInfo insured, @WebParam(name = "sessionID")String sessionID, @WebParam(name = "startDate")Date startDate) {
         String policyID = "";
         float premium = 0;
         String typePolicy = "TRA";
@@ -393,6 +431,23 @@ public class MyService {
         premium = travelResponse.premium;
         if (premium == 0) {
             return new BookResponse(travelResponse.message, travelResponse.code, "0");
+        }
+
+        if (owner.firstName.equals("")) {
+            return new BookResponse("Ве молиме внесете го името на осигуреникот!", 111, "0");
+        } 
+
+        if (owner.lastName.equals("")) {
+            return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
+        } 
+
+        int ageOfOwner = 0;
+        if (owner.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (owner.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
+        } else {
+            ageOfOwner = getAgeFromSSN(owner.ssn);
         }
 
         if (insured.firstName.equals("")) {
@@ -403,37 +458,38 @@ public class MyService {
             return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
         } 
 
-        int ageOfInsured = 0;
-        if (insured.ssn.equals("")) {
-            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
-        } else if (insured.ssn.length() != 13) {
-            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
-        } 
-        else {
-            ageOfInsured = getAgeFromSSN(insured.ssn);
-        }
-
-        String todaysDateString = "";
-        Date date = new Date();
+        Date endDate;
+        String startDateString = "", endDateString = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        todaysDateString = format.format(date); 
-        try{
-            FileWriter file = new FileWriter("src\\main\\java\\data\\travelPolicies.txt", true);
-            policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + bookTravelInfo.type.toString() + "|" + bookTravelInfo.cover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|"+ sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
-            file.write(newPolicy);
-            file.close();
-            
-        } catch (IOException e) {
+        System.out.println("startDate: " + format.format(startDate));
+
+        startDateString = format.format(startDate); 
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.DAY_OF_MONTH, bookTravelInfo.days);
+        endDate = c.getTime();
+        endDateString = format.format(endDate);
+
+        System.out.println("startDate: " + startDateString + ", endDate: " + endDateString);
+        policyID = typePolicy + replaceSelected(typePolicy);
+        System.out.println(policyID);
+        int prem = (int) premium;
+        int result = 0;
+        try {
+            result = DigitalOceanDatabase.insertTravelPolicy(bookTravelInfo, owner, insured, startDateString, endDateString, sessionID, policyID, prem);
+            if (result != 1) {
+                return new BookResponse("Настана грешка! Проверете си ги податоците!", 199, "0");
+            }
+            System.out.println("result is" + result);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
         
-
         return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
 
     @WebMethod
-    public BookResponse bookHouseholdPolicy(@WebParam(name = "HouseholdInfo")HouseholdInfo householdInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "sessionID")String sessionID) {
+    public BookResponse bookHouseholdPolicy(@WebParam(name = "HouseholdInfo")HouseholdInfo householdInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "startDate")Date startDate, @WebParam(name = "sessionID")String sessionID) {
         String policyID = "";
         float premium = 0;
         String typePolicy = "HHL";
@@ -461,26 +517,37 @@ public class MyService {
             ageOfInsured = getAgeFromSSN(insured.ssn);
         }
 
-        String todaysDateString = "";
-        Date date = new Date();
+        Date endDate;
+        String startDateString = "", endDateString = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        todaysDateString = format.format(date); 
+        System.out.println("startDate: " + format.format(startDate));
 
-        try{
-            FileWriter file = new FileWriter("src\\main\\java\\data\\householdPolicies.txt", true);
-            policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + householdInfo.typeObject.toString() + "|" + householdInfo.typeHouseholdCover.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
-            file.write(newPolicy);
-            file.close();
-            
-        } catch (IOException e) {
+        startDateString = format.format(startDate); 
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.YEAR, 1);
+        endDate = c.getTime();
+        endDateString = format.format(endDate);
+
+        System.out.println("startDate: " + startDateString + ", endDate: " + endDateString);
+        policyID = typePolicy + replaceSelected(typePolicy);
+        System.out.println(policyID);
+        int result = 0;
+        try {
+            result = DigitalOceanDatabase.insertHouseholdPolicy(householdInfo, insured, startDateString, endDateString, sessionID, policyID, (int)premium);
+            if (result != 1) {
+                return new BookResponse("Настана грешка! Проверете си ги податоците!", 199, "0");
+            }
+            System.out.println("result is" + result);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+        
         return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
 
     @WebMethod
-    public BookResponse bookCascoPolicy(@WebParam(name = "CascoInfo")CascoInfo cascoInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "sessionID")String sessionID) {
+    public BookResponse bookCascoPolicy(@WebParam(name = "CascoInfo")CascoInfo cascoInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "startDate")Date startDate, @WebParam(name = "sessionID")String sessionID) {
         String policyID = "";
         float premium = 0;
         String typePolicy = "CSC";
@@ -508,73 +575,194 @@ public class MyService {
             ageOfInsured = getAgeFromSSN(insured.ssn);
         }
 
-        String todaysDateString = "";
-        Date date = new Date();
+        Date endDate;
+        String startDateString = "", endDateString = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        todaysDateString = format.format(date); 
+        System.out.println("startDate: " + format.format(startDate));
 
-        try{
-            FileWriter file = new FileWriter("src\\main\\java\\data\\cascoPolicies.txt", true);
-            policyID = typePolicy + replaceSelected(typePolicy);
-            String newPolicy = policyID + "|" + String.valueOf(premium) + "|" + cascoInfo.typeCasco.toString() + "|" + cascoInfo.typeValue.toString() + "|" + insured.firstName + "|" + insured.lastName + "|" + sessionID + "|" + String.valueOf(ageOfInsured) + "|" + todaysDateString + "|OP" + "\n";
-            file.write(newPolicy);
-            file.close();
-            
-        } catch (IOException e) {
+        startDateString = format.format(startDate); 
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.YEAR, 1);
+        endDate = c.getTime();
+        endDateString = format.format(endDate);
+
+        System.out.println("startDate: " + startDateString + ", endDate: " + endDateString);
+        policyID = typePolicy + replaceSelected(typePolicy);
+        System.out.println(policyID);
+        int result = 0;
+        
+        try {
+            result = DigitalOceanDatabase.insertCascoPolicy(cascoInfo, insured, startDateString, endDateString, sessionID, policyID, (int)premium);
+            if (result != 1) {
+                return new BookResponse("Настана грешка! Проверете си ги податоците!", 199, "0");
+            }
+            System.out.println("result is" + result);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
         return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
 
     @WebMethod
-    public ConfirmResponse confirmPolicy(@WebParam(name = "policyID")String policyID, @WebParam(name = "creditCardInfo") CreditCardInfo creditCardInfo, @WebParam(name = "sessionID") String sessionID){
-        
-        if (checkSessionID(sessionID) == 0) {
-            return new ConfirmResponse("Бројот на сесија е невалиден!", 117);
+    public BookResponse bookAOPolicy(@WebParam(name = "AOInfo")AOInfo aoInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "startDate")Date startDate, @WebParam(name = "sessionID")String sessionID) {
+        String policyID = "";
+        float premium = 0;
+        String typePolicy = "AOL";
+        QuotationResponse aoResponse =  getAOQuotation(aoInfo, insured.ssn, sessionID);
+        premium = aoResponse.premium;
+        if (premium == 0) {
+            return new BookResponse(aoResponse.message, aoResponse.code, "0");
         }
 
-        if (creditCardInfo.creditCardNumber.equals("")) {
-            return new ConfirmResponse("Внесете број на картичка", 111);
-        } else if (creditCardInfo.creditCardNumber.length() != 16) {
-            return new ConfirmResponse("Внесете 16 цифри за број на картичка", 112);
+        if (insured.firstName.equals("")) {
+            return new BookResponse("Ве молиме внесете го името на осигуреникот!", 111, "0");
+        } 
+
+        if (insured.lastName.equals("")) {
+            return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
+        } 
+
+        int ageOfInsured = 0;
+        if (insured.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (insured.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
         }
-        
-        if (creditCardInfo.expiryDate == null) {
-            return new ConfirmResponse("Внесете го датумот на истекување на картичката(формат: mm/yyyy)", 113);
-        } else {
-            Date date = new Date();
-            if (creditCardInfo.expiryDate.before(date)) {
-                return new ConfirmResponse("Истечена ви е картичката", 114);
-            }
-        }
-        
-        if (creditCardInfo.CVV.length() != 3) {
-            return new ConfirmResponse("Внесете 3 цифри за CVV", 115);
+        else {
+            ageOfInsured = getAgeFromSSN(insured.ssn);
         }
 
-        if (policyID.equals("")) {
-            return new ConfirmResponse("Внесете број на полиса!", 110);
-        } else {
-            try {
-                List<String> policyData = Helpers.payForPolicy(policyID);
-                if (policyData.get(0).equals("NOK")) {
-                    return new ConfirmResponse("Полисата е веќе платена!", 117);
-                } else {
-                    PDF.createPDF(policyID, policyData, sessionID);
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        Date endDate;
+        String startDateString = "", endDateString = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("startDate: " + format.format(startDate));
+
+        startDateString = format.format(startDate); 
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.YEAR, 1);
+        endDate = c.getTime();
+        endDateString = format.format(endDate);
+
+        System.out.println("startDate: " + startDateString + ", endDate: " + endDateString);
+        policyID = typePolicy + replaceSelected(typePolicy);
+        System.out.println(policyID);
+        int result = 0;
+        
+        try {
+            result = DigitalOceanDatabase.insertAOPolicy(aoInfo, insured, startDateString, endDateString, sessionID, policyID, (int)premium);
+            if (result != 1) {
+                return new BookResponse("Настана грешка! Проверете си ги податоците!", 199, "0");
             }
+            System.out.println("result is" + result);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
         }
-        return new ConfirmResponse("Полисата со број: " + policyID + " е успешно платена", 100);
+        return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
 
     @WebMethod
-    public double converter(@WebParam(name = "EUR") String evra) {
-        return Integer.valueOf(evra) * 61.5;
+    public BookResponse bookAccidentPolicy(@WebParam(name = "AccidentInfo")AccidentInfo accidentInfo, @WebParam(name = "Insured") InsuredInfo insured, @WebParam(name = "sessionID")String sessionID) {
+        String policyID = "";
+        float premium = 0;
+        String typePolicy = "ACC";
+        QuotationResponse accidentResponse =  getAccidentQuotation(accidentInfo, sessionID);
+        premium = accidentResponse.premium;
+        if (premium == 0) {
+            return new BookResponse(accidentResponse.message, accidentResponse.code, "0");
+        }
+
+        if (insured.firstName.equals("")) {
+            return new BookResponse("Ве молиме внесете го името на осигуреникот!", 111, "0");
+        } 
+
+        if (insured.lastName.equals("")) {
+            return new BookResponse("Ве молиме внесете го презимето на осигуреникот!", 112, "0");
+        } 
+
+        int ageOfInsured = 0;
+        if (insured.ssn.equals("")) {
+            return new BookResponse("Ве молиме внесете го матичниот број на осигуреникот!", 113, "0");
+        } else if (insured.ssn.length() != 13) {
+            return new BookResponse("Ве молиме внесете за матичниот број внесете 13 цифри!", 113, "0");
+        }
+        else {
+            ageOfInsured = getAgeFromSSN(insured.ssn);
+        }
+
+        Date endDate;
+        String startDateString = "", endDateString = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("startDate: " + format.format(accidentInfo.startDate));
+
+        startDateString = format.format(accidentInfo.startDate); 
+        Calendar c = Calendar.getInstance();
+        c.setTime(accidentInfo.startDate);
+        c.add(Calendar.YEAR, 1);
+        endDate = c.getTime();
+        endDateString = format.format(endDate);
+
+        System.out.println("startDate: " + startDateString + ", endDate: " + endDateString);
+        policyID = typePolicy + replaceSelected(typePolicy);
+        System.out.println(policyID);
+        int result = 0;
+        
+        try {
+            result = DigitalOceanDatabase.insertAccidentPolicy(accidentInfo, insured, startDateString, endDateString, sessionID, policyID, (int)premium);
+            if (result != 1) {
+                return new BookResponse("Настана грешка! Проверете си ги податоците!", 199, "0");
+            }
+            System.out.println("result is" + result);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
+    // @WebMethod
+    // public ConfirmResponse confirmPolicy(@WebParam(name = "policyID")String policyID, @WebParam(name = "creditCardInfo") CreditCardInfo creditCardInfo, @WebParam(name = "sessionID") String sessionID){
+        
+    //     if (checkSessionID(sessionID) == 0) {
+    //         return new ConfirmResponse("Бројот на сесија е невалиден!", 117);
+    //     }
+
+    //     if (creditCardInfo.creditCardNumber.equals("")) {
+    //         return new ConfirmResponse("Внесете број на картичка", 111);
+    //     } else if (creditCardInfo.creditCardNumber.length() != 16) {
+    //         return new ConfirmResponse("Внесете 16 цифри за број на картичка", 112);
+    //     }
+        
+    //     if (creditCardInfo.expiryDate == null) {
+    //         return new ConfirmResponse("Внесете го датумот на истекување на картичката(формат: mm/yyyy)", 113);
+    //     } else {
+    //         Date date = new Date();
+    //         if (creditCardInfo.expiryDate.before(date)) {
+    //             return new ConfirmResponse("Истечена ви е картичката", 114);
+    //         }
+    //     }
+        
+    //     if (creditCardInfo.CVV.length() != 3) {
+    //         return new ConfirmResponse("Внесете 3 цифри за CVV", 115);
+    //     }
+
+    //     if (policyID.equals("")) {
+    //         return new ConfirmResponse("Внесете број на полиса!", 110);
+    //     } else {
+    //         try {
+    //             List<String> policyData = Helpers.payForPolicy(policyID);
+    //             if (policyData.get(0).equals("NOK")) {
+    //                 return new ConfirmResponse("Полисата е веќе платена!", 117);
+    //             } else {
+    //                 PDF.createPDF(policyID, policyData, sessionID);
+    //             }
+    //         } catch (NumberFormatException e) {
+    //             e.printStackTrace();
+    //         } catch (IOException e) {
+    //             e.printStackTrace();
+    //         }
+    //     }
+    //     return new ConfirmResponse("Полисата со број: " + policyID + " е успешно платена", 100);
+    // }
 
     /*
         POMOSHNI FUNKCII / NE SE DEL OD SERVISOT
@@ -638,6 +826,10 @@ public class MyService {
             fileToOpen = "src\\main\\java\\data\\householdPolicyEvidence.txt";
         } else if (typePolicy.equals("CSC")) {
             fileToOpen = "src\\main\\java\\data\\cascoPolicyEvidence.txt";
+        } else if (typePolicy.equals("AOL")) {
+            fileToOpen = "src\\main\\java\\data\\aoPolicyEvidence.txt";
+        } else if (typePolicy.equals("ACC")) {
+            fileToOpen = "src\\main\\java\\data\\accidentPolicyEvidence.txt";
         }
             File fileToBeModified = new File(fileToOpen);
             String oldString = "";
@@ -667,26 +859,38 @@ public class MyService {
             }
     }   
 
+    // public static int checkSessionID(String sessionID) {
+    //     int found = 0;
+    //     try {
+    //         File file = new File("src\\main\\java\\data\\sessions.txt");
+    //         Scanner scanner = new Scanner(file);
+    //         while(scanner.hasNextLine()) {
+    //             String line = scanner.nextLine();
+    //             String sessionInfo[] = line.split(" ");
+    //             if (sessionID.equals(sessionInfo[1])) {
+    //                 found = 1;
+    //                 break;
+    //             } else {
+    //                 found = 0;
+    //             }
+    //         }
+    //         scanner.close();
+    //     } catch (FileNotFoundException e) {
+    //         found = 0;
+    //         e.printStackTrace();
+    //     }
+    //     return found;
+    // }
+
     public static int checkSessionID(String sessionID) {
         int found = 0;
         try {
-            File file = new File("src\\main\\java\\data\\sessions.txt");
-            Scanner scanner = new Scanner(file);
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String sessionInfo[] = line.split(" ");
-                if (sessionID.equals(sessionInfo[1])) {
-                    found = 1;
-                    break;
-                } else {
-                    found = 0;
-                }
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            found = 0;
+            found = DigitalOceanDatabase.CheckSessionID(sessionID);
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
         return found;
     }
 

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,10 +63,231 @@ public class DigitalOceanDatabase {
             } catch(SQLException e) {
                 e.printStackTrace();
             }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
         }
         
 
         
         return result;
     }
+
+    public static int CheckSessionID(String sessionID) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+            ResultSet rs = null;
+            PreparedStatement ps = null;
+            String query = "select count(*) as sessionFound from sessions where sessionid = '" + sessionID + "';";
+
+            try {
+                ps = conn.prepareStatement(query);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    result = rs.getInt("sessionFound");
+                }
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+                rs.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+        
+        return result;
+    }
+
+    /* INSERT TRAVEL */
+    public static int insertTravelPolicy(TravelInfo travelInfo, InsuredInfo contractorInfo, InsuredInfo insuredInfo, String startDate, String endDate, String sessionID, String policyID, int premium) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+
+            PreparedStatement ps = null;
+
+            String query = "insert into travelPolicy(policy_id, policy_type, status, premium, travel_type, travel_cover, insured_days, num_people, is_below_18, is_above_65, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, insured_first_name, insured_last_name, insured_id, insured_address, insured_postal, insured_city, creation_date, start_date, end_date, session_id)";
+            query += " values (";
+            query += "'" + policyID + "'," + "1, " + "'OP', " + String.valueOf(premium) + "," + "'" + travelInfo.type.toString() + "', '" + travelInfo.cover.toString() + "', " + travelInfo.days + ", " + String.valueOf(travelInfo.numPeople) + ", false, false, '" + contractorInfo.firstName + "', '" + contractorInfo.lastName + "', '" + contractorInfo.ssn + "', '" + contractorInfo.address + "', '" + contractorInfo.postalCode + "', '" + contractorInfo.city + "', '" + insuredInfo.firstName + "', '" + insuredInfo.lastName + "', '" + insuredInfo.ssn + "', '" + insuredInfo.address + "', '" + insuredInfo.postalCode + "', '" + insuredInfo.city + "', " + " sysdate(), " + "str_to_date('"+ startDate +"', '%Y-%m-%d'), " + "str_to_date('" + endDate + "', '%Y-%m-%d'), " + "'" + sessionID + "');";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                result = ps.executeUpdate();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+                //rs.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+
+        return result;
+    }
+
+    /* INSERT HOUSEHOLD */
+    public static int insertHouseholdPolicy(HouseholdInfo householdInfo, InsuredInfo contractorInfo, String startDate, String endDate, String sessionID, String policyID, int premium) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+
+            PreparedStatement ps = null;
+            String query = "INSERT INTO householdPolicy (policy_id, policy_type, status, premium, house_type, household_cover, contract_length, date_of_object, area_of_object, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, creation_date, start_date, end_date, session_id)";
+            query += "values (";
+            query += "'" + policyID + "', 2, 'OP', " + premium + ", '" + householdInfo.typeObject+ "', '" + householdInfo.typeHouseholdCover + "', " + householdInfo.contractLenght + ", '" + householdInfo.dateOfObject + "', " + householdInfo.areaOfObject + ", '" + contractorInfo.firstName + "', '" + contractorInfo.lastName + "', '" + contractorInfo.ssn + "', '" + contractorInfo.address + "', '" + contractorInfo.postalCode + "', '" + contractorInfo.city + "', " + " sysdate(), " + "str_to_date('"+ startDate +"', '%Y-%m-%d'), " + "str_to_date('" + endDate + "', '%Y-%m-%d'), " + "'" + sessionID + "');";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                result = ps.executeUpdate();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+                //rs.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+
+        return result;
+    }
+
+    /* INSERT CASCO */
+    public static int insertCascoPolicy(CascoInfo cascoInfo, InsuredInfo contractorInfo, String startDate, String endDate, String sessionID, String policyID, int premium) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+
+            PreparedStatement ps = null;
+            String query = "INSERT INTO cascoPolicy (policy_id, policy_type, status, premium, casco_type, car_value, vehicle_price, franchise, isWindows, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, creation_date, start_date, end_date, session_id)";
+            query += "values (";
+            query += "'" + policyID + "', 3, 'OP', " + premium + ", '" + cascoInfo.typeCasco + "', '" + cascoInfo.typeValue + "', " + cascoInfo.vehiclePrice + ", " + cascoInfo.franchise + ", " + cascoInfo.windows + ", '" + contractorInfo.firstName + "', '" + contractorInfo.lastName + "', '" + contractorInfo.ssn + "', '" + contractorInfo.address + "', '" + contractorInfo.postalCode + "', '" + contractorInfo.city + "', " + " sysdate(), " + "str_to_date('"+ startDate +"', '%Y-%m-%d'), " + "str_to_date('" + endDate + "', '%Y-%m-%d'), " + "'" + sessionID + "');";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                result = ps.executeUpdate();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+
+        return result;
+    }
+
+    /* INSERT AOL*/
+    public static int insertAOPolicy(AOInfo aoInfo, InsuredInfo contractorInfo, String startDate, String endDate, String sessionID, String policyID, int premium) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+
+            PreparedStatement ps = null;
+            String query = "INSERT INTO aoPolicy (policy_id, policy_type, status, premium, reg_number, chassis, vehicle_power, isNew, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, creation_date, start_date, end_date, session_id)";
+            query += "values (";
+            query += "'" + policyID + "', 4, 'OP', " + premium + ", '" + aoInfo.regNum + "', '" + aoInfo.chassis + "', " + aoInfo.KW + ", " + aoInfo.isNew + ", '" + contractorInfo.firstName + "', '" + contractorInfo.lastName + "', '" + contractorInfo.ssn + "', '" + contractorInfo.address + "', '" + contractorInfo.postalCode + "', '" + contractorInfo.city + "', " + " sysdate(), " + "str_to_date('"+ startDate +"', '%Y-%m-%d'), " + "str_to_date('" + endDate + "', '%Y-%m-%d'), " + "'" + sessionID + "');";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                result = ps.executeUpdate();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+
+        return result;
+    }
+
+    /* INSERT ACC */
+    public static int insertAccidentPolicy(AccidentInfo accidentInfo, InsuredInfo contractorInfo, String startDate, String endDate, String sessionID, String policyID, int premium) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        if (conn != null) {
+
+
+            /*
+            `pack`,
+`isStudent`,
+            */
+            PreparedStatement ps = null;
+            String query = "INSERT INTO accidentPolicy (policy_id, policy_type, status, premium, pack, isStudent, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, creation_date, start_date, end_date, session_id)";
+            query += "values (";
+            query += "'" + policyID + "', 5, 'OP', " + premium + ", " + accidentInfo.pack + ", " + accidentInfo.isStudent + ", '" + contractorInfo.firstName + "', '" + contractorInfo.lastName + "', '" + contractorInfo.ssn + "', '" + contractorInfo.address + "', '" + contractorInfo.postalCode + "', '" + contractorInfo.city + "', " + " sysdate(), " + "str_to_date('"+ startDate +"', '%Y-%m-%d'), " + "str_to_date('" + endDate + "', '%Y-%m-%d'), " + "'" + sessionID + "');";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                result = ps.executeUpdate();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+
+        return result;
+    }
+
 }

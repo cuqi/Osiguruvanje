@@ -1,5 +1,7 @@
 package myservice;
 
+import java.sql.Date;
+
 enum TypeTravelPolicy {
     INDIVIDUAL,
     FAMILY,
@@ -20,9 +22,8 @@ public class TravelInfo {
     public int days;
     public String country;
     public int numPeople;
-    boolean isbelow18;
-    boolean isabove65;
-    
+    public boolean isbelow18;
+    public boolean isabove65;
 
     public TravelInfo() {
     }
