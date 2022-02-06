@@ -4,7 +4,7 @@ import myservice.REST.Helpers;
 
 import javax.jws.WebService;
 
-import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+// import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -33,123 +33,6 @@ import java.util.Base64.Encoder;
 @WebService
 public class MyService {
 
-    // @WebMethod // soap 1.1 
-    // public String loginMethod(@WebParam(name = "username")String username, @WebParam(name = "password")String password) throws NoSuchAlgorithmException {
-    //     try {
-    //         System.out.println("Working Directory = " + System.getProperty("user.dir"));
-    //         File file = new File("src\\main\\java\\data\\registeredUsers.txt");
-    //         Scanner scanner = new Scanner(file);
-    //         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    //         byte[] encodedhash = digest.digest(
-    //             password.getBytes(StandardCharsets.UTF_8)
-    //         );
-    //         String hashedPassword = bytesToHex(encodedhash);
-    //         while(scanner.hasNextLine()) {
-    //             String line = scanner.nextLine();
-    //             String userInfo[] = line.split(" ");
-    //             if (username.equals(userInfo[0]) && hashedPassword.equals(userInfo[1])) {
-    //                 scanner.close();
-    //                 SecureRandom random = new SecureRandom();
-    //                 byte bytes[] = new byte[20];
-    //                 random.nextBytes(bytes);
-    //                 Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-    //                 String token = encoder.encodeToString(bytes);
-
-    //                 FileWriter file2 = new FileWriter("src\\main\\java\\data\\sessions.txt", true);
-    //                 file2.write("\n" + userInfo[2] + " " + token);
-    //                 file2.close();
-    //                 return token;
-    //             } 
-    //         }
-    //         scanner.close();
-    //         return "There was an error!";
-    //     } catch (FileNotFoundException e) {
-    //         e.printStackTrace();
-    //         return "File cannot be found";
-    //     } catch (IOException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //         return e.getMessage();
-    //     }
-    // }
-
-    // @WebMethod
-    // public String register(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2, @WebParam(name = "email")String email) throws NoSuchAlgorithmException {
-    //     try{
-    //         FileWriter file = new FileWriter("src\\main\\java\\data\\registeredUsers.txt", true);
-    //         String newUser = "";
-    //         if (password1.equals(password2)) {
-    //             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    //             byte[] encodedhash = digest.digest(
-    //             password1.getBytes(StandardCharsets.UTF_8)
-    //             );
-    //             String hashedPassword = bytesToHex(encodedhash);
-    //             newUser = username + " " + hashedPassword + " " + email + "\r\n";
-    //         } 
-    //         file.write(newUser);
-    //         file.close();
-    //         return "Успешно се регистриравте!";
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         return "Неуспешно, настана грешка!";
-    //     }
-    // }
-
-    // @WebMethod
-    // public String unregister(@WebParam(name = "username")String username, @WebParam(name = "password1")String password1, @WebParam(name = "password2")String password2) throws IOException, NoSuchAlgorithmException{
-    //     boolean flag = false;
-    //     if(!password1.equals(password2)) {
-    //         return "Внесените пасворди се различни";
-    //     } else {
-    //         try {
-    //             File inputFile = new File("registeredUsers.txt");
-    //             File tempFile = new File("src\\main\\java\\data\\tempusers.txt");
-    //             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-    //             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-    //             String currentLine;
-                
-    //             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    //             byte[] encodedhash = digest.digest(
-    //             password1.getBytes(StandardCharsets.UTF_8)
-    //             );
-    //             String hashedPassword = bytesToHex(encodedhash);
-
-    //             if((currentLine = reader.readLine()) != null) {
-    //                 String[] entries = currentLine.split(" ");
-    //                 // System.out.println(entries[0] + " " + entries[1]);
-    //                 if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
-    //                     flag = true;
-    //                 } else {
-    //                     writer.write(currentLine);
-    //                 }
-    //             }
-
-    //             while((currentLine = reader.readLine()) != null) {
-    //                 String[] entries = currentLine.split(" ");
-    //                 if(entries[0].equals(username) && entries[1].equals(hashedPassword)) {
-    //                     flag = true;
-    //                     continue;
-    //                 } 
-    //                 writer.write(System.getProperty("line.separator") + currentLine);
-    //             }
-    //             writer.close(); 
-    //             reader.close(); 
-                
-    //             inputFile.delete();
-    //             tempFile.renameTo(inputFile);
-
-    //             if (flag) {
-    //                 return "User-от е избришан";
-    //             } else {
-    //                 return "Погрешен username или password";
-    //             }
-
-    //             } catch (FileNotFoundException e) {
-    //                 return "Server error";
-    //             }
-    //     }
-    // }
-
     @WebMethod 
     public QuotationResponse getTravelQuotation(@WebParam(name = "travelInfo")TravelInfo travelInfo, @WebParam(name = "sessionID")String sessionID) {
         double premium = 0.0;
@@ -158,6 +41,7 @@ public class MyService {
         } else if (checkSessionID(sessionID) == 0) {
             return new QuotationResponse("Session ID e погрешно!", 102, 0);
         }
+
 
         if (travelInfo.days < 3 || travelInfo.days > 365) {
             return new QuotationResponse("Минимален број на денови е 3, максимален е 365", 109, 0);
@@ -168,7 +52,7 @@ public class MyService {
         }
 
         if (travelInfo.type == null) {
-            return new QuotationResponse("Ве молиме внесете го видот на патничкото осигурување(INDIVIDUAL, FAMILY, STUDENT, GROUP, BUSINESS)", 110, 0);
+            return new QuotationResponse("Ве молиме внесете го видот на патничкото осигурување(ИНДИВИДУАЛНО, ФАМИЛИЈАРНО, СТУДЕНТ, ГРУПНО, БИЗНИС)", 110, 0);
         } else {
             switch(travelInfo.type) {
                 case INDIVIDUAL:
@@ -196,7 +80,7 @@ public class MyService {
         }
         
         if (travelInfo.cover == null) {
-            return new QuotationResponse("Ве молиме внесете го типот на покритие(CLASSIC, VISA, VIP)", 111, 0);
+            return new QuotationResponse("Ве молиме внесете го типот на покритие(КЛАСИК, ВИЗА, ВИП)", 111, 0);
         } else {
             switch(travelInfo.cover) {
                 case CLASSIC:
@@ -209,15 +93,6 @@ public class MyService {
                     break;
             }
         }
-
-        if (travelInfo.isbelow18) {
-            premium -= premium * 0.1;
-        }
-
-        if (travelInfo.isabove65) {
-            premium += premium * 0.05;
-        }
-        
         return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium + " денари."), 100, (int) Math.abs(premium));
     }
 
@@ -277,7 +152,7 @@ public class MyService {
                 return new QuotationResponse("Ве молиме внесете 1, 3 или 5 во полето за должина на договорот.", 113, 0);
         }
         
-        return new QuotationResponse("Премијата изнесува: " + String.valueOf((int)premium) + " денари.", 100, (int) premium);
+        return new QuotationResponse("Годишна премија: \t " + String.valueOf((int)premium) + " ден", 100, (int) premium);
     }
 
     @WebMethod 
@@ -412,7 +287,7 @@ public class MyService {
                 break;
             default:
                 premium = 0;
-                return new QuotationResponse("Внесете 1, 2 или 3 за пакет на осигурување на несреќен случај!", 131, (int) premium);
+                return new QuotationResponse("Внесете 1, 2 или 3 за пакет на осигурување од несреќен случај!", 131, (int) premium);
         }
 
         if (accidentInfo.isStudent) {
@@ -719,50 +594,40 @@ public class MyService {
         }
         return new BookResponse("Успешно е креирана полисата со сериски број: " + policyID, 100, policyID);
     }
-    // @WebMethod
-    // public ConfirmResponse confirmPolicy(@WebParam(name = "policyID")String policyID, @WebParam(name = "creditCardInfo") CreditCardInfo creditCardInfo, @WebParam(name = "sessionID") String sessionID){
-        
-    //     if (checkSessionID(sessionID) == 0) {
-    //         return new ConfirmResponse("Бројот на сесија е невалиден!", 117);
-    //     }
 
-    //     if (creditCardInfo.creditCardNumber.equals("")) {
-    //         return new ConfirmResponse("Внесете број на картичка", 111);
-    //     } else if (creditCardInfo.creditCardNumber.length() != 16) {
-    //         return new ConfirmResponse("Внесете 16 цифри за број на картичка", 112);
-    //     }
+    @WebMethod
+    public String createPDF(@WebParam(name = "policyID")String policyID, @WebParam(name = "sessionID")String sessionID) {
         
-    //     if (creditCardInfo.expiryDate == null) {
-    //         return new ConfirmResponse("Внесете го датумот на истекување на картичката(формат: mm/yyyy)", 113);
-    //     } else {
-    //         Date date = new Date();
-    //         if (creditCardInfo.expiryDate.before(date)) {
-    //             return new ConfirmResponse("Истечена ви е картичката", 114);
-    //         }
-    //     }
-        
-    //     if (creditCardInfo.CVV.length() != 3) {
-    //         return new ConfirmResponse("Внесете 3 цифри за CVV", 115);
-    //     }
-
-    //     if (policyID.equals("")) {
-    //         return new ConfirmResponse("Внесете број на полиса!", 110);
-    //     } else {
-    //         try {
-    //             List<String> policyData = Helpers.payForPolicy(policyID);
-    //             if (policyData.get(0).equals("NOK")) {
-    //                 return new ConfirmResponse("Полисата е веќе платена!", 117);
-    //             } else {
-    //                 PDF.createPDF(policyID, policyData, sessionID);
-    //             }
-    //         } catch (NumberFormatException e) {
-    //             e.printStackTrace();
-    //         } catch (IOException e) {
-    //             e.printStackTrace();
-    //         }
-    //     }
-    //     return new ConfirmResponse("Полисата со број: " + policyID + " е успешно платена", 100);
-    // }
+        String policyTypeStr = policyID.substring(0, 3).trim();
+        System.out.println(policyTypeStr);
+        int policyType = 99;
+        switch(policyTypeStr){
+            case "TRA":
+                policyType = 1;
+                break;
+            case "HHL":
+                policyType = 2;
+                break;
+            case "AOL":
+                policyType = 3;
+                break;
+            case "CSC":
+                policyType = 4;
+                break;
+            case "ACC":
+                policyType = 5;
+                break;
+        }
+        System.out.println(policyType);
+        try {
+            DigitalOceanDatabase.getPolicyData(policyID, policyType, sessionID);
+            return "OK";
+        } catch (SQLException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "NOK";
+        }
+    }
 
     /*
         POMOSHNI FUNKCII / NE SE DEL OD SERVISOT
@@ -858,29 +723,6 @@ public class MyService {
                 }
             }
     }   
-
-    // public static int checkSessionID(String sessionID) {
-    //     int found = 0;
-    //     try {
-    //         File file = new File("src\\main\\java\\data\\sessions.txt");
-    //         Scanner scanner = new Scanner(file);
-    //         while(scanner.hasNextLine()) {
-    //             String line = scanner.nextLine();
-    //             String sessionInfo[] = line.split(" ");
-    //             if (sessionID.equals(sessionInfo[1])) {
-    //                 found = 1;
-    //                 break;
-    //             } else {
-    //                 found = 0;
-    //             }
-    //         }
-    //         scanner.close();
-    //     } catch (FileNotFoundException e) {
-    //         found = 0;
-    //         e.printStackTrace();
-    //     }
-    //     return found;
-    // }
 
     public static int checkSessionID(String sessionID) {
         int found = 0;

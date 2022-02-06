@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Properties;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
@@ -257,11 +258,6 @@ public class DigitalOceanDatabase {
         int result = 0;
         if (conn != null) {
 
-
-            /*
-            `pack`,
-`isStudent`,
-            */
             PreparedStatement ps = null;
             String query = "INSERT INTO accidentPolicy (policy_id, policy_type, status, premium, pack, isStudent, contractor_first_name, contractor_last_name, contractor_id, contractor_address, contractor_postal, contractor_city, creation_date, start_date, end_date, session_id)";
             query += "values (";
@@ -287,6 +283,101 @@ public class DigitalOceanDatabase {
             }  
         }
 
+        return result;
+    }
+
+    public static int getPolicyData(String policyID, int policyType, String sessionID) throws FileNotFoundException, SQLException, IOException {
+        Connection conn = DigitalOceanDatabase.connectToDatabase();
+        int result = 0;
+        InsuredInfo contractor = new InsuredInfo();
+        InsuredInfo insured = new InsuredInfo();
+        String startDate = ""; 
+        String endDate = ""; 
+        String creationDate = ""; 
+        String paymentRef = ""; 
+        String username = "";
+        String email = ""; 
+        String premium = ""; 
+        String id = "";
+
+        String pol = "";
+        switch(policyType) {
+            case 1:
+                pol = "travelPolicy";
+                break;
+            case 2:
+                pol = "householdPolicy";
+                break;
+            case 3:
+                pol = "aoPolicy";
+                break;
+            case 4:
+                pol = "cascoPolicy";
+                break;
+            case 5:
+                pol = "accidentPolicy";
+                break;
+            default:
+                pol = "";
+                break;
+        }
+        System.out.println(pol);
+        if (conn != null) {
+            ResultSet rs = null;
+            PreparedStatement ps = null;
+            String query = "select * from " + pol + " inner join sessions on " + pol + ".session_id=sessions.sessionid where policy_id = '" + policyID + "' and session_id = '" + sessionID + "';";
+            System.out.println(query);
+            try {
+                ps = conn.prepareStatement(query);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    id = String.valueOf(rs.getInt("id"));
+                    premium = String.valueOf(rs.getDouble("premium"));
+
+                    contractor.firstName = rs.getString("contractor_first_name");
+                    contractor.lastName = rs.getString("contractor_last_name");
+                    contractor.address = rs.getString("contractor_address");
+                    contractor.city = rs.getString("contractor_city");
+                    contractor.postalCode = rs.getString("contractor_postal");
+                    contractor.ssn = rs.getString("contractor_id");
+
+                    insured.firstName = rs.getString("insured_first_name");
+                    insured.lastName = rs.getString("insured_last_name");
+                    insured.address = rs.getString("insured_address");
+                    insured.city = rs.getString("insured_city");
+                    insured.postalCode = rs.getString("insured_postal");
+                    insured.ssn = rs.getString("insured_id");
+
+                    startDate = String.valueOf(rs.getDate("start_date"));
+                    endDate = String.valueOf(rs.getDate("end_date"));
+                    creationDate = String.valueOf(rs.getDate("creation_date"));
+
+                    paymentRef = rs.getString("payment_ref");
+
+                    username = rs.getString("username");
+                    email = "krstik1212@gmail.com";
+                }
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ps.close();
+                rs.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                conn.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }  
+        }
+        System.out.println(premium + ", " + startDate + ", " + contractor.address);
+        PDF.fillPDF(contractor, insured, startDate, endDate, creationDate, paymentRef, sessionID, username, email, policyID, premium, id, pol.toUpperCase());
+        
         return result;
     }
 

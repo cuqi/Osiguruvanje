@@ -4,6 +4,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <repositories>
+      <repository>
+        <id>com.e-iceblue</id>
+        <name>e-iceblue</name>
+        <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+    </repository>
+    </repositories>
     <parent>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-parent</artifactId>
@@ -135,21 +142,39 @@
   <version>1.14</version>
 </dependency>
 
-<dependency>
-	<groupId>mysql</groupId>
-	<artifactId>mysql-connector-java</artifactId>
-	<version>8.0.16</version>
-</dependency>
 <!-- Thanks for using https://jar-download.com -->
+<dependency>
+  <groupId>e-iceblue</groupId>
+  <artifactId>spire.doc.free</artifactId>
+  <version>3.9.0</version>
+</dependency>
 
-
+<dependency>
+  <groupId>mysql</groupId>
+  <artifactId>mysql-connector-java</artifactId>
+  <version>8.0.28</version>
+</dependency>
+ 
+<dependency>
+  <groupId>e-iceblue</groupId>
+  <artifactId>spire.doc.free</artifactId>
+  <version>3.9.0</version>
+</dependency>
+   <!-- <dependency>
+     <groupId>mysql</groupId>
+     <artifactId>mysql-connector-java</artifactId>
+     <version>8.0.17</version>
+   </dependency> -->
+ 
  </dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+	
+
+ 			<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

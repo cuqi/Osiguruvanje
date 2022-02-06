@@ -2,67 +2,53 @@ package myservice;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import javax.mail.MessagingException;
+
+import com.spire.doc.Document;
+import com.spire.doc.DocumentBase;
+import com.spire.doc.FileFormat;
 
 import org.apache.tomcat.util.codec.binary.StringUtils;
 
 public class PDF {
-    public static String createPDF(String policyID, List<String> policyData, String sessionID) {
-        Document document = new Document();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream("src\\main\\java\\data\\pdfs\\" + policyID + ".pdf"));
+    public static void fillPDF(InsuredInfo contractor, InsuredInfo insured, String startDate, String endDate, String creationDate, String paymentRef, String sessionID, String username, String email, String policyID, String premium, String id, String policyType) throws FileNotFoundException {
+        Document doc = new Document();
 
-            document.open();
-            PdfPTable table = new PdfPTable(3);
-            Stream.of("Informacii za polisa")
-                .forEach(columnTitle -> {
-                PdfPCell header = new PdfPCell();
-                header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                header.setBorderWidth(2);
-                header.setPhrase(new Phrase(columnTitle));
-                table.addCell(header);
-            });
-            for(int i = 0; i < policyData.size(); i++) {
-                table.addCell(policyData.get(i));
-            }
-            document.add(table);
-            document.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
+        doc.loadFromFile("src\\main\\java\\data\\pdfs\\invoice.docx");
+
+        doc.replace(":username", username, true, true);
+        doc.replace(":email", email, true, true);
+        doc.replace(":payment_ref", paymentRef, true, true);
+        doc.replace(":session_id", sessionID, true, true);
+        doc.replace(":start_date", startDate, true, true);
+        doc.replace(":expiry_date", endDate, true, true);
+        doc.replace(":creation_date", creationDate, true, true);
+        doc.replace(":id", id, true, true);
+        doc.replace(":contractor_first_name", contractor.firstName, true, true);
+        doc.replace(":contractor_last_name", contractor.lastName, true, true);
+        doc.replace(":contractor_id", contractor.ssn, true, true);
+        doc.replace(":contractor_address", contractor.address, true, true);
+        doc.replace(":contractor_city", contractor.city, true, true);
+        doc.replace(":insured_first_name", insured.firstName, true, true);
+        doc.replace(":insured_last_name", insured.lastName, true, true);
+        doc.replace(":insured_id", insured.ssn, true, true);
+        doc.replace(":insured_address", insured.address, true, true);
+        doc.replace(":insured_city", insured.city, true, true);
+        doc.replace(":policy_id", policyID, true, true);
+        doc.replace(":policy_type", policyType, true, true);
+        doc.replace(":premium", premium, true, true);
+
+        doc.saveToFile("src\\main\\java\\data\\docxs\\invoice" + policyID + ".docx", FileFormat.Docx);
+
+        try {
+            SendMail.sendmail(email, policyID);
+        } catch (MessagingException | IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        document.open();
-        return "ok";
-    }
-
-    private static void addTableHeader(PdfPTable table) {
-        Stream.of("column header 1", "column header 2", "column header 3")
-          .forEach(columnTitle -> {
-            PdfPCell header = new PdfPCell();
-            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            header.setBorderWidth(2);
-            header.setPhrase(new Phrase(columnTitle));
-            table.addCell(header);
-        });
-    }
-
-    private static void addRows(PdfPTable table) {
-        table.addCell("row 1, col 1");
-        table.addCell("row 1, col 2");
-        table.addCell("row 1, col 3");
     }
 }

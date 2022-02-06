@@ -22,19 +22,16 @@ public class TravelInfo {
     public int days;
     public String country;
     public int numPeople;
-    public boolean isbelow18;
-    public boolean isabove65;
+
 
     public TravelInfo() {
     }
 
-    public TravelInfo(TypeTravelPolicy type, TypeCover cover, int days, String country, int numPeople, boolean isbelow18, boolean isabove65) {
+    public TravelInfo(TypeTravelPolicy type, TypeCover cover, int days, String country, int numPeople) {
         this.type = type;
         this.cover = cover;
         this.days = days;
         this.country = country;
         this.numPeople = numPeople;
-        this.isabove65 = isabove65;
-        this.isbelow18 = isbelow18;
     }
 }
